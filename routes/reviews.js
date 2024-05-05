@@ -178,6 +178,7 @@ router.post('/:bookId/edit', upload.single('bookCoverFile'), async (req, res) =>
         const {newBookName, newBookAuthors, newPublishedYear, newBookTagline, bookId, newGenres, bookCoverURL} = req.body;
         const Book = require('../models/book');
         const book = await Book.findById(bookId);
+        let bookCoverPath = book.bookCoverPath;
         if (req.file) {
             // Upload file to Firebase Storage
             const fileUpload = await bucket.upload(req.file.path, {

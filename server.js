@@ -15,7 +15,7 @@ app.use(cors()); // Enable CORS for all routes
 app.use(express.json());
 dotenv.config();
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/BookReviewForum')
+mongoose.connect(process.env.MONGO_URL)
     .then(() => {
         console.log('MongoDB connected');
     })
@@ -79,7 +79,7 @@ app.use(express.static(path.join(__dirname, 'public'), {
 }));
 
 // Create a new OpenAI instance with your API key
-const openai = new OpenAI(process.env.OPEN_AI_KEY);
+const openai = new OpenAI(process.env.OPENAI_API_KEY);
 
 // Route for summarizing book reviews
 app.post("/book-summarizer", async (req, res) => {
