@@ -27,6 +27,9 @@
 }
 
 .card {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
     background-color: #fff;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     border-radius: 4px;
@@ -35,42 +38,40 @@
     width: 100%;
     margin: 0;
     min-height: 25vh; /* Ensure the card height adjusts based on content */
+    font-family: var(--ArchivoFont);
+
 }
 
 
 .card-media {
     width: auto;
+    max-width: 50%;
     max-height: 23vh;
     flex-shrink: 0; /* Prevent the image from shrinking */
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
 .card-body {
-    flex: 1;
     margin-left: 2.5vh;
     align-self: flex-start;
     display: flex;
     flex-direction: column; 
     gap: 1.3vh;
-    align-content: space-between;
-    height: 100%; /* Take up full height of the card */
 }
 
 .card-title {
-    font-size: 20px;
-    font-weight: 750;
-    font-family: var(--bookSummaryFont);
-    margin: 0.5vh 0;
+    font-size: 22px;
+    font-weight: 800;
+    margin: 0.2vh 0;
 }
 
-.card-description{
-    font-family: var(--ArchivoFont);
+.card-description, .published-year{
+    font-weight: 350;
 }
 
 
 .card-author{
     font-weight: 600;
-    font-family: var(--ArchivoFont);
-    margin-top: 1.5vh; 
+    margin: 0; 
 }
 .page-title{
   margin: auto auto 0 5vh;
