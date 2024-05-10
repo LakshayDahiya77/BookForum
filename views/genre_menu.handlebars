@@ -9,12 +9,18 @@
     <div class="cards-container">
         {{#each books}}
         <a href="/reviews/{{_id}}" class="card-link">
-            <div class="card centered-flex">
+            <div class="card">
                 <img src="{{bookCoverPath}}" alt="" class="card-media" />
                 <div class="card-body">
                     <h3 class="card-title">{{bookName}}</h3>
-                    <span class="card-description">{{bookTagline}}</span>
-                    <div class="card-author">{{authors}}</div>
+                    
+                    <div class="card-author">{{#each authors}}
+                        {{this}}{{#unless @last}},&nbsp;{{/unless}}
+                    {{/each}}
+                    </div>
+
+{{!--                     <span class="published-year">{{publishedYear}}</span>
+ --}}                    <span class="card-description">{{bookTagline}}</span>
                 </div>
             </div>
         </a>
