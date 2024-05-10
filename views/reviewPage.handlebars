@@ -25,8 +25,7 @@
             <i> by
                 <span id="book-author">
                     {{#each book.authors}}
-                        {{this}}
-                        {{#unless @last}}, {{/unless}} 
+                        {{this}}{{#unless @last}},&nbsp;{{/unless}}
                     {{/each}}
                 </span>
             </i>
@@ -37,12 +36,12 @@
             </h5>
             <h5 id="reviews-count">Reviews Count: {{reviews.length}}</h5>
             <div class="book-summary-toolbar">
-                <button id="writeReviewButton">Write Review</button>
-                <button id="summarizeButton">Summarize Reviews</button>
-                <button class="addToFavourites" data-book-id="{{book._id}}">Add to Favourites</button>
+                <button id="writeReviewButton" class="book-summary-toolbar-item">Write Review</button>
+                <button id="summarizeButton" class="book-summary-toolbar-item">Summarize Reviews</button>
+                <button class="addToFavourites" data-book-id="{{book._id}}" class="book-summary-toolbar-item">Add to Favourites</button>
                 
                 {{#if isAdmin}}
-                    <button class="editBookButton" style="border: 1px solid blue;">Edit</button> 
+                    <button class="editBookButton book-summary-toolbar-item" style="border: 1px solid blue;" >Edit</button> 
                 {{/if}}
             </div>
         </div>
