@@ -17,15 +17,15 @@
         <div class="name-and-status centered-flex">
             <h2>{{username}}</h2>
         </div>
-        <div class="toolbar-panel centered-flex">
+        <div class="toolbar-panel">
             <form action="/sign-out" method="POST">
-                <button type="submit" id="sign-out-btn">Sign Out</button>
+                <button type="submit" id="sign-out-btn" class="toobar-btn">Sign Out</button>
             </form>
             
-           <form id="profilePicForm" enctype="multipart/form-data" action="/upload-profile-pic" method="POST">
-                <input type="file" name="profilePic" accept="image/*" id="profile-pic-input" style="display: none;">
-                <button type="button" id="change-profile-pic">Change Profile Picture</button>
-                <button type="submit" id="upload-btn" style="display: none;">Upload</button>
+           <form id="profilePicForm" enctype="multipart/form-data" action="/upload-profile-pic" method="POST" class="toobar-btn">
+                <input type="file" name="profilePic" accept="image/*" id="profile-pic-input" style="display: none;" class="toobar-btn">
+                <button type="button" id="change-profile-pic" class="toobar-btn">Change Profile Picture</button>
+                <button type="submit" id="upload-btn" style="display: none;" class="toobar-btn">Upload</button>
             </form>
                     
         </div>
@@ -72,12 +72,14 @@
                             </div>
                             <div class="book-details">
                                 <div class="book-title">{{this.bookName}}</div>
+                                
                                 <div class="book-author">
                                     {{#each this.authors}}
                                         {{this}}
                                         {{#unless @last}}, {{/unless}}
                                     {{/each}}
                                 </div>
+                                <div class="book-year">{{this.publishedYear}}</div>
                                 <button class="removeFromFavourites" data-book-id="{{this._id}}">Remove from Favourites</button>
                             </div>
                         </a>
