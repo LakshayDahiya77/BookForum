@@ -33,15 +33,16 @@ router.post('/signup', async (req, res) => {
     }
 });
 
+
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Check if username and password are correct
+        // Check if email and password are correct
         const user = await User.findOne({ email });
 
         if (!user || user.password !== password) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).render('login', { error: 'Invalid credentials', layout: false });
         }
 
         req.session.username = user.username;
@@ -49,11 +50,11 @@ router.post('/login', async (req, res) => {
         req.session.profilePicURL = user.profilePicURL;
         req.session.isAdmin = user.isAdmin;
 
-        // Redirect or send a success response
+        // Redirect to home page on successful login
         res.redirect('/home');
     } catch (err) {
         console.error('Error authenticating user:', err);
-        res.status(500).json({ message: 'Internal server error' });
+        res.status(500).render('login', { error: 'Internal server error', layout: false });
     }
 });
 
