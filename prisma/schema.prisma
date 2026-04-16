@@ -20,7 +20,7 @@ model User {
 
 model Author {
   id        String   @id @default(uuid())
-  name      String
+  name      String   @unique
   bio       String?
   photoUrl  String?
   
@@ -39,7 +39,7 @@ model Book {
   id            String   @id @default(uuid())
   title         String
   description   String?
-  publishYear   Int
+  publishYear   Int?
   coverUrl      String?
   aiSummary     String?
 

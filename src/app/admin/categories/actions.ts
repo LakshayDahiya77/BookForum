@@ -2,6 +2,7 @@
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { UPLOAD_LIMITS } from "@/lib/uploadConfig";
 
@@ -14,8 +15,8 @@ export async function deleteCategory(formData: FormData) {
     const fileName = category.icon.split("/").pop();
 
     if (fileName) {
-      const supabase = await createClient();
-      await supabase.storage.from(UPLOAD_LIMITS.CATEGORY_ICON.bucket).remove([fileName]);
+      // 2. Delete the file from the bucket using admin client
+      await supabaseAdmin.storage.from(UPLOAD_LIMITS.CATEGORY_ICON.bucket).remove([fileName]);
     }
   }
   await prisma.category.delete({ where: { id } });
@@ -34,12 +35,11 @@ export async function addCategory(formData: FormData) {
   }
 
   await requireAdmin();
-  const supabase = await createClient();
 
   const fileExt = file.name.split(".").pop();
   const fileName = `${crypto.randomUUID()}.${fileExt}`;
 
-  const { error } = await supabase.storage
+  const { error } = await supabaseAdmin.storage
     .from(UPLOAD_LIMITS.CATEGORY_ICON.bucket)
     .upload(fileName, file);
 
@@ -49,7 +49,7 @@ export async function addCategory(formData: FormData) {
 
   const {
     data: { publicUrl },
-  } = supabase.storage.from(UPLOAD_LIMITS.CATEGORY_ICON.bucket).getPublicUrl(fileName);
+  } = supabaseAdmin.storage.from(UPLOAD_LIMITS.CATEGORY_ICON.bucket).getPublicUrl(fileName);
 
   await prisma.category.create({
     data: { name, icon: publicUrl },
@@ -70,12 +70,11 @@ export async function updateCategory(formData: FormData) {
     if (file.size > UPLOAD_LIMITS.CATEGORY_ICON.maxSize) {
       throw new Error("Image must be smaller than 2MB.");
     }
-    const supabase = await createClient();
     const oldCategory = await prisma.category.findUnique({ where: { id } });
     const fileExt = file.name.split(".").pop();
     const fileName = `${crypto.randomUUID()}.${fileExt}`;
 
-    const { error } = await supabase.storage
+    const { error } = await supabaseAdmin.storage
       .from(UPLOAD_LIMITS.CATEGORY_ICON.bucket)
       .upload(fileName, file);
     if (error) {
@@ -84,14 +83,14 @@ export async function updateCategory(formData: FormData) {
 
     const {
       data: { publicUrl },
-    } = supabase.storage.from(UPLOAD_LIMITS.CATEGORY_ICON.bucket).getPublicUrl(fileName);
+    } = supabaseAdmin.storage.from(UPLOAD_LIMITS.CATEGORY_ICON.bucket).getPublicUrl(fileName);
 
     updateData.icon = publicUrl;
 
     if (oldCategory?.icon) {
       const oldFileName = oldCategory.icon.split("/").pop();
       if (oldFileName) {
-        await supabase.storage.from(UPLOAD_LIMITS.CATEGORY_ICON.bucket).remove([oldFileName]);
+        await supabaseAdmin.storage.from(UPLOAD_LIMITS.CATEGORY_ICON.bucket).remove([oldFileName]);
       }
     }
   }
