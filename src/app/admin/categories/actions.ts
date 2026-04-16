@@ -3,8 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-
-const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
+import { UPLOAD_LIMITS } from "@/lib/uploadConfig";
 
 export async function deleteCategory(formData: FormData) {
   await requireAdmin();
@@ -16,8 +15,7 @@ export async function deleteCategory(formData: FormData) {
 
     if (fileName) {
       const supabase = await createClient();
-      // 2. Delete the file from the bucket
-      await supabase.storage.from("category-icons").remove([fileName]);
+      await supabase.storage.from(UPLOAD_LIMITS.CATEGORY_ICON.bucket).remove([fileName]);
     }
   }
   await prisma.category.delete({ where: { id } });
@@ -31,7 +29,7 @@ export async function addCategory(formData: FormData) {
   if (!file || file.size === 0) {
     throw new Error("File is missing");
   }
-  if (file.size > MAX_FILE_SIZE) {
+  if (file.size > UPLOAD_LIMITS.CATEGORY_ICON.maxSize) {
     throw new Error("Image must be smaller than 2MB.");
   }
 
@@ -41,7 +39,9 @@ export async function addCategory(formData: FormData) {
   const fileExt = file.name.split(".").pop();
   const fileName = `${crypto.randomUUID()}.${fileExt}`;
 
-  const { error } = await supabase.storage.from("category-icons").upload(fileName, file);
+  const { error } = await supabase.storage
+    .from(UPLOAD_LIMITS.CATEGORY_ICON.bucket)
+    .upload(fileName, file);
 
   if (error) {
     throw new Error(error.message);
@@ -49,7 +49,7 @@ export async function addCategory(formData: FormData) {
 
   const {
     data: { publicUrl },
-  } = supabase.storage.from("category-icons").getPublicUrl(fileName);
+  } = supabase.storage.from(UPLOAD_LIMITS.CATEGORY_ICON.bucket).getPublicUrl(fileName);
 
   await prisma.category.create({
     data: { name, icon: publicUrl },
@@ -67,29 +67,31 @@ export async function updateCategory(formData: FormData) {
   const updateData: { name: string; icon?: string } = { name };
 
   if (file && file.size > 0) {
-    if (file.size > 2 * 1024 * 1024) {
-      throw new Error("Image must be less than 2MB");
+    if (file.size > UPLOAD_LIMITS.CATEGORY_ICON.maxSize) {
+      throw new Error("Image must be smaller than 2MB.");
     }
     const supabase = await createClient();
     const oldCategory = await prisma.category.findUnique({ where: { id } });
     const fileExt = file.name.split(".").pop();
     const fileName = `${crypto.randomUUID()}.${fileExt}`;
 
-    const { error } = await supabase.storage.from("category-icons").upload(fileName, file);
+    const { error } = await supabase.storage
+      .from(UPLOAD_LIMITS.CATEGORY_ICON.bucket)
+      .upload(fileName, file);
     if (error) {
       throw new Error(error.message);
     }
 
     const {
       data: { publicUrl },
-    } = supabase.storage.from("category-icons").getPublicUrl(fileName);
+    } = supabase.storage.from(UPLOAD_LIMITS.CATEGORY_ICON.bucket).getPublicUrl(fileName);
 
     updateData.icon = publicUrl;
 
     if (oldCategory?.icon) {
       const oldFileName = oldCategory.icon.split("/").pop();
       if (oldFileName) {
-        await supabase.storage.from("category-icons").remove([oldFileName]);
+        await supabase.storage.from(UPLOAD_LIMITS.CATEGORY_ICON.bucket).remove([oldFileName]);
       }
     }
   }

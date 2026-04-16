@@ -4,6 +4,7 @@ import Form from "next/form";
 import { addCategory } from "./actions";
 import { Button } from "@/components/buttons/simpleButton";
 import { CategoryRow } from "@/components/CategoryRow";
+import { UPLOAD_LIMITS, formatFileSize } from "@/lib/uploadConfig";
 
 export default async function AdminCategoriesPage() {
   await requireAdmin();
@@ -26,7 +27,9 @@ export default async function AdminCategoriesPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Icon (Max 2MB)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Icon (Max {formatFileSize(UPLOAD_LIMITS.CATEGORY_ICON.maxSize)})
+            </label>
             <input
               type="file"
               name="iconFile"

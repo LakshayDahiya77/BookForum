@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { Button } from "@/components/buttons/simpleButton";
 import { updateCategory, deleteCategory } from "@/app/admin/categories/actions";
+import { UPLOAD_LIMITS, formatFileSize } from "@/lib/uploadConfig";
 import type { Category } from "@prisma/client";
 
 export function CategoryRow({ category }: { category: Category }) {
@@ -68,7 +69,7 @@ export function CategoryRow({ category }: { category: Category }) {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Icon (Max 2MB)
+                  Icon (Max {formatFileSize(UPLOAD_LIMITS.CATEGORY_ICON.maxSize)})
                 </label>
                 <div className="flex items-center gap-3 p-2 bg-gray-50 border border-gray-200 rounded-md">
                   <div className="flex flex-col items-center justify-center shrink-0">
