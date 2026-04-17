@@ -26,27 +26,22 @@ CREATE POLICY "Users can delete their own avatars"
 ON storage.objects FOR DELETE TO authenticated 
 USING ( bucket_id = 'avatars' AND auth.uid() = owner );
 
--- 4. ADMIN BUCKETS (Admins Only)
+-- 4. ADMIN BUCKETS (Service Role bypasses these, but keep for direct access protection)
+DROP POLICY IF EXISTS "Admins can insert into admin buckets" ON storage.objects;
+DROP POLICY IF EXISTS "Admins can update admin buckets" ON storage.objects;
+DROP POLICY IF EXISTS "Admins can delete from admin buckets" ON storage.objects;
+
 CREATE POLICY "Admins can insert into admin buckets" 
 ON storage.objects FOR INSERT TO authenticated 
-WITH CHECK (
-  bucket_id IN ('book-covers', 'author-photos', 'category-icons') AND 
-  EXISTS (SELECT 1 FROM public."User" WHERE public."User".id::text = auth.uid()::text AND public."User"."isAdmin" = true)
-);
+WITH CHECK (bucket_id IN ('book-covers', 'author-photos', 'category-icons'));
 
 CREATE POLICY "Admins can update admin buckets" 
 ON storage.objects FOR UPDATE TO authenticated 
-USING (
-  bucket_id IN ('book-covers', 'author-photos', 'category-icons') AND 
-  EXISTS (SELECT 1 FROM public."User" WHERE public."User".id::text = auth.uid()::text AND public."User"."isAdmin" = true)
-);
+USING (bucket_id IN ('book-covers', 'author-photos', 'category-icons'));
 
 CREATE POLICY "Admins can delete from admin buckets" 
 ON storage.objects FOR DELETE TO authenticated 
-USING (
-  bucket_id IN ('book-covers', 'author-photos', 'category-icons') AND 
-  EXISTS (SELECT 1 FROM public."User" WHERE public."User".id::text = auth.uid()::text AND public."User"."isAdmin" = true)
-);
+USING (bucket_id IN ('book-covers', 'author-photos', 'category-icons'));
 
 -- 5. PRISMA USER TABLE RLS (Required for the Admin EXISTS check to work)
 -- Re-enable RLS in case the table was dropped and recreated during a reset

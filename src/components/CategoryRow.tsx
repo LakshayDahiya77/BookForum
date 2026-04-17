@@ -58,12 +58,24 @@ export function CategoryRow({ category }: { category: Category }) {
             <form action={handleUpdate} className="flex flex-col gap-4">
               <input type="hidden" name="id" value={category.id} />
               <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                 <input
                   type="text"
                   name="name"
                   defaultValue={category.name}
                   className="border border-gray-300 p-2 w-full rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <textarea
+                  name="description"
+                  defaultValue={category.description || ""}
+                  rows={2}
+                  className="border border-gray-300 p-2 w-full rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  placeholder="Optional description"
                 />
               </div>
 

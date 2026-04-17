@@ -25,6 +25,7 @@ export async function deleteCategory(formData: FormData) {
 
 export async function addCategory(formData: FormData) {
   const name = formData.get("name") as string;
+  const description = formData.get("description") as string | null;
   const file = formData.get("iconFile") as File;
 
   if (!file || file.size === 0) {
@@ -52,7 +53,7 @@ export async function addCategory(formData: FormData) {
   } = supabaseAdmin.storage.from(UPLOAD_LIMITS.CATEGORY_ICON.bucket).getPublicUrl(fileName);
 
   await prisma.category.create({
-    data: { name, icon: publicUrl },
+    data: { name, description, icon: publicUrl },
   });
 
   revalidatePath("/admin/categories");
@@ -62,9 +63,13 @@ export async function updateCategory(formData: FormData) {
   await requireAdmin();
   const id = formData.get("id") as string;
   const name = formData.get("name") as string;
+  const description = formData.get("description") as string | null;
   const file = formData.get("iconFile") as File | null;
 
-  const updateData: { name: string; icon?: string } = { name };
+  const updateData: { name: string; description?: string | null; icon?: string } = {
+    name,
+    description,
+  };
 
   if (file && file.size > 0) {
     if (file.size > UPLOAD_LIMITS.CATEGORY_ICON.maxSize) {

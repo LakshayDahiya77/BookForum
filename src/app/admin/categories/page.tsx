@@ -11,7 +11,7 @@ export default async function AdminCategoriesPage() {
   const categories = await prisma.category.findMany();
   return (
     <div className="flex flex-col items-center justify-start min-h-screen py-10 bg-gray-50 px-4">
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-full max-w-xl">
+      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-full max-w-xl m-10">
         <h1 className="text-xl font-bold text-gray-900 mb-5">Add New Category</h1>
         <Form action={addCategory} className="flex flex-col gap-4">
           <div>
@@ -23,6 +23,17 @@ export default async function AdminCategoriesPage() {
               placeholder="e.g. Science Fiction"
               className="border border-gray-300 p-2 w-full rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
               required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <input
+              type="text"
+              name="description"
+              id="add-category-description"
+              placeholder="Some Catchy Line"
+              className="border border-gray-300 p-2 w-full rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
 
@@ -48,8 +59,8 @@ export default async function AdminCategoriesPage() {
         </Form>
       </div>
 
-      <div className="w-full max-w-xl mt-10">
-        <h1 className="text-xl font-bold mb-4 text-center">All Categories</h1>
+      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-full max-w-xl">
+        <h1 className="text-xl font-bold text-gray-900 mb-5">All Categories</h1>
         <ul className="flex flex-col gap-3">
           {categories.map((category) => (
             <CategoryRow key={category.id} category={category} />

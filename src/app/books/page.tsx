@@ -28,84 +28,69 @@ export default async function BooksGridPage() {
         <h1 className="text-4xl font-bold text-gray-900 mb-2">Books</h1>
         <p className="text-gray-600 mb-8">Discover and explore our collection of books</p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {books.map((book) => (
             <div
               key={book.id}
-              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden flex flex-col"
+              className="bg-white rounded-lg shadow-sm border border-gray-100 p-5 flex gap-5 hover:shadow-md transition-shadow"
             >
               {/* Book Cover */}
-              {book.coverUrl ? (
-                <div className="w-full h-56 bg-gray-200 overflow-hidden">
+              <div className="shrink-0 w-32 h-54 bg-gray-100 rounded-sm shadow-sm flex items-center justify-center overflow-hidden">
+                {book.coverUrl ? (
                   <img
                     src={book.coverUrl}
                     alt={book.title}
                     className="w-full h-full object-cover"
                   />
-                </div>
-              ) : (
-                <div className="w-full h-56 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
-                  <span className="text-gray-500 text-sm">No cover image</span>
-                </div>
-              )}
+                ) : (
+                  <span className="text-gray-400 text-xs text-center px-2">No cover</span>
+                )}
+              </div>
 
               {/* Book Info */}
-              <div className="p-4 flex-1 flex flex-col">
-                {/* Title */}
-                <h2 className="text-lg font-bold text-gray-900 line-clamp-2 mb-2">{book.title}</h2>
-
-                {/* Authors */}
-                {book.authors.length > 0 && (
-                  <p className="text-sm text-gray-600 mb-2 line-clamp-1">
-                    by {book.authors.map((a) => a.name).join(", ")}
-                  </p>
-                )}
-
-                {/* Publish Year */}
-                {book.publishYear && (
-                  <p className="text-xs text-gray-500 mb-3">{book.publishYear}</p>
-                )}
-
-                {/* Categories */}
-                {book.categories.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mb-3">
-                    {book.categories.slice(0, 2).map((cat) => (
-                      <span
-                        key={cat.id}
-                        className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full"
-                      >
-                        {cat.name}
-                      </span>
-                    ))}
-                    {book.categories.length > 2 && (
-                      <span className="text-xs text-gray-600 px-2 py-1">
-                        +{book.categories.length - 2} more
-                      </span>
-                    )}
-                  </div>
-                )}
-
-                {/* Description */}
-                {book.description && (
-                  <p className="text-sm text-gray-600 line-clamp-2 mb-3 flex-1">
-                    {book.description}
-                  </p>
-                )}
-
-                {/* Vote Counts */}
-                <div className="flex gap-2 text-xs text-gray-600 mb-4 border-t pt-3">
-                  <span>👍 {book.likeCount}</span>
-                  <span>👎 {book.dislikeCount}</span>
+              <div className="flex-1 flex flex-col justify-between py-1">
+                <div>
+                  <h2 className="text-lg font-bold text-gray-900 leading-tight mb-2">
+                    {book.title}
+                  </h2>
+                  {/* Authors */}
+                  {book.authors.length > 0 && (
+                    <p className="text-[0.9rem] italic font-semibold text-gray-600 line-clamp-2">
+                      by {book.authors.map((a) => a.name).join(", ")}
+                    </p>
+                  )}
+                  {/* Description / Subtitle */}
+                  {book.description && (
+                    <p className="text-sm text-gray-600 line-clamp-3 leading-relaxed">
+                      {book.description}
+                    </p>
+                  )}
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex gap-2">
-                  <Button variant="secondary" size="sm" className="flex-1">
-                    View
-                  </Button>
-                  <Button variant="primary" size="sm" className="flex-1">
-                    Like
-                  </Button>
+                {/* Footer items */}
+                <div className="mt-3 flex flex-col gap-2">
+                  {/* Action Buttons (Like / Dislike) */}
+                  <div className="flex gap-2 items-center mt-1">
+                    <Button variant="ghost" size="sm" className="h-7 text-xs px-2">
+                      👍 {book.likeCount || 0}
+                    </Button>
+                    <Button variant="ghost" size="sm" className="h-7 text-xs px-2 text-gray-500">
+                      👎{book.dislikeCount || 0}
+                    </Button>
+                  </div>
+                  {/* Categories */}
+                  {book.categories.length > 0 && (
+                    <div className="flex flex-wrap gap-1 line-clamp-2 overflow-hidden max-h-12">
+                      {book.categories.map((cat) => (
+                        <span
+                          key={cat.id}
+                          className="text-[0.65rem] bg-blue-50 text-blue-700 px-2 py-0.5 rounded cursor-default border border-blue-100"
+                        >
+                          {cat.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
