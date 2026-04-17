@@ -1,48 +1,52 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
-import { createClient } from "@/lib/supabase/server";
+export async function loginAction(formData: FormData) {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
 
-export async function login(formData: FormData) {
   const supabase = await createClient();
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
-  };
-
-  const { error } = await supabase.auth.signInWithPassword(data);
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
   if (error) {
-    console.error("Login error:", error);
-    redirect(`/error?error=${encodeURIComponent(error.message)}`);
+    return { error: error.message };
   }
 
-  revalidatePath("/", "layout");
-  redirect("/profile");
+  // If successful, redirect to the categories page
+  redirect("/categories");
 }
 
-export async function signup(formData: FormData) {
-  const supabase = await createClient();
+export async function signupAction(formData: FormData) {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  const confirmPassword = formData.get("confirmPassword") as string;
+  const name = formData.get("name") as string;
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
-  };
-
-  const { error } = await supabase.auth.signUp(data);
-
-  if (error) {
-    console.error("Signup error:", error);
-    redirect(`/error?error=${encodeURIComponent(error.message)}`);
+  if (password !== confirmPassword) {
+    return { error: "Passwords do not match." };
   }
 
-  revalidatePath("/", "layout");
-  redirect("/profile");
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        name: name, // Stores the name in Supabase Auth metadata
+      },
+    },
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { success: true, message: "Success! Please check your email to confirm your account." };
 }
