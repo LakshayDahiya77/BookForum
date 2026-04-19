@@ -47,7 +47,7 @@ model Book {
   // Counters (Optional: You can cache totals here for faster loading, 
   // updating them via database triggers when BookVote changes)
   likeCount     Int      @default(0)
-  dislikeCount  Int      @default(0)
+  averageRating Float    @default(0)
 
   // Relations
   authors       Author[]   // Implicit Many-to-Many
@@ -61,7 +61,6 @@ model BookVote {
   id        String   @id @default(uuid())
   userId    String
   bookId    String
-  isLike    Boolean  // true = like, false = dislike
   
   user      User     @relation(fields: [userId], references: [id])
   book      Book     @relation(fields: [bookId], references: [id])
@@ -73,9 +72,9 @@ model BookVote {
 model Review {
   id        String   @id @default(uuid())
   content   String
-  rating    Int      // e.g., 1 to 5
-  likes     Int      @default(0)
-  createdAt DateTime @default(now())
+  rating      Int      // e.g., 1 to 5
+  reviewLikes Int      @default(0)
+  createdAt   DateTime @default(now())
   
   userId    String
   bookId    String
