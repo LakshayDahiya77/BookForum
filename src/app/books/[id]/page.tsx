@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/buttons/simpleButton";
-import { AddReview } from "./actions";
+import { AddReview, ToggleLike } from "./actions";
 
 export default async function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const authUser = await requireUser();
@@ -64,9 +64,17 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
 
             <div className="mt-3 flex flex-col gap-2">
               <div className="flex gap-2 items-center mt-1">
-                <Button variant="ghost" size="sm" className="h-7 text-xs px-2 border">
-                  👍 {book.likeCount || 0}
-                </Button>
+                <form action={ToggleLike}>
+                  <input type="hidden" name="book-id" value={book.id} />
+                  <Button
+                    type="submit"
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 text-xs px-2 border"
+                  >
+                    👍 {book.likeCount || 0}
+                  </Button>
+                </form>
                 <Button variant="ghost" size="sm" className="h-7 text-xs px-2 border text-gray-700">
                   ⭐ {book.averageRating || 0}
                 </Button>
@@ -115,6 +123,20 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
         </div>
         <form className="flex-1 font-black" action={AddReview}>
           <input type="hidden" name="book-id" value={book.id} />
+          <div className="flex gap-2 mb-2 items-center">
+            <span className="text-sm font-medium text-gray-700">Rating:</span>
+            <select
+              name="rating"
+              required
+              className="border border-gray-300 rounded px-2 py-1 text-sm outline-none focus:border-blue-400"
+            >
+              <option value="5">5 - Excellent</option>
+              <option value="4">4 - Good</option>
+              <option value="3">3 - Average</option>
+              <option value="2">2 - Poor</option>
+              <option value="1">1 - Terrible</option>
+            </select>
+          </div>
           <textarea
             rows={6}
             placeholder="Write your review..."
