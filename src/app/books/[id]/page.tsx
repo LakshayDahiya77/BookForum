@@ -16,6 +16,9 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
     include: {
       authors: true,
       categories: true,
+      votes: {
+        where: { userId: dbUser?.id },
+      },
       reviews: {
         include: {
           user: true,
@@ -26,6 +29,7 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
       },
     },
   });
+  const hasUserLikedBook = book?.votes && book.votes.length > 0;
   if (!book) {
     notFound();
   }
@@ -70,9 +74,9 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                     type="submit"
                     variant="ghost"
                     size="sm"
-                    className="h-7 text-xs px-2 border"
+                    className={`h-7 text-xs px-2 border ${hasUserLikedBook ? "bg-blue-50 text-blue-700 border-blue-300" : ""}`}
                   >
-                    👍 {book.likeCount || 0}
+                    {hasUserLikedBook ? "👍 Liked" : "👍 Like"} ({book.likeCount || 0})
                   </Button>
                 </form>
                 <Button variant="ghost" size="sm" className="h-7 text-xs px-2 border text-gray-700">
@@ -142,7 +146,7 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
             placeholder="Write your review..."
             name="review-text"
             required
-            className="w-full p-2 border border-gray-300 rounded-md text-sm outline-none focus:border-blue-400"
+            className="w-full p-2 border border-gray-300 rounded-md text-sm text-black outline-none focus:border-blue-400"
           />
           <Button type="submit" variant="primary" className="mt-2">
             Publish Review

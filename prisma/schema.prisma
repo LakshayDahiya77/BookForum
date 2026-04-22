@@ -80,4 +80,7 @@ model Review {
   bookId    String
   user      User     @relation(fields: [userId], references: [id])
   book      Book     @relation(fields: [bookId], references: [id])
+
+  // This strictly enforces one review per user, per book at the database level
+  @@unique([userId, bookId])
 }
