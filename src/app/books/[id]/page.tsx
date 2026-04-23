@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/buttons/simpleButton";
 import { AddReview, ToggleLike } from "./actions";
+import ReviewCard from "@/components/ReviewCard";
+import { AISummaryCard } from "@/components/ReviewCard";
 
 export default async function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const authUser = await requireUser();
@@ -109,8 +111,8 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
           </div>
         </div>
       </div>
-      {/*Publish Your review */}
 
+      {/*Publish Your review */}
       <div className="p-4 border border-gray-200 rounded-md bg-gray-50 flex gap-4 max-w-7xl mx-5 mt-8">
         <div className="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0 overflow-hidden">
           {dbUser?.avatarUrl ? (
@@ -153,48 +155,32 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
           </Button>
         </form>
       </div>
+
       {/* Review section */}
       <div className="p-5 max-w-7xl mt-8 border-t border-gray-200">
-        <h3 className="text-xl font-bold mb-4">Reviews ({book.reviews.length})</h3>
+        <h3 className="text-xl font-bold mb-6">Reviews ({book.reviews.length})</h3>
+
+        {book.aiSummary && <AISummaryCard summary={book.aiSummary} />}
 
         {book.reviews.length > 0 ? (
           <div className="flex flex-col gap-4">
             {book.reviews.map((review) => (
-              <div
+              <ReviewCard
                 key={review.id}
-                className="p-4 border border-gray-200 rounded-md bg-gray-50 flex gap-4"
-              >
-                <div className="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0 overflow-hidden">
-                  {review.user.avatarUrl ? (
-                    <img
-                      src={review.user.avatarUrl}
-                      alt={review.user.name || "User"}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full w-full text-gray-500 font-bold">
-                      {(review.user.name || "A")[0].toUpperCase()}
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <div className="flex items-baseline gap-2 mb-1">
-                    <span className="font-bold">{review.user.name || "Anonymous"}</span>
-                    <span className="text-xs text-gray-500">
-                      {new Date(review.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="text-yellow-600 text-sm mb-2">
-                    {"★".repeat(review.rating)}
-                    {"☆".repeat(5 - review.rating)}
-                  </div>
-                  <p className="text-sm text-gray-700">{review.content}</p>
-                </div>
-              </div>
+                id={review.id}
+                bookId={review.bookId}
+                isOwner={dbUser?.id === review.userId}
+                user={review.user}
+                rating={review.rating}
+                content={review.content}
+                createdAt={review.createdAt}
+              />
             ))}
           </div>
         ) : (
-          <p className="text-sm text-gray-500">No reviews yet. Be the first to review!</p>
+          <p className="text-sm text-gray-500 bg-gray-50 p-6 rounded-md text-center border border-dashed border-gray-300">
+            No reviews yet. Be the first to review!
+          </p>
         )}
       </div>
     </main>

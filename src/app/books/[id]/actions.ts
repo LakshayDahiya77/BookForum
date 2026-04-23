@@ -4,6 +4,8 @@ import { requireUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { updateBookAverageRating } from "@/lib/ratings";
 import { Prisma } from "@prisma/client";
+import { generateBookSummary } from "@/lib/ai/summarize";
+import { APP_CONFIG } from "@/config/app";
 
 export async function ToggleLike(formData: FormData) {
   try {
@@ -15,7 +17,6 @@ export async function ToggleLike(formData: FormData) {
     const bookId = formData.get("book-id") as string;
     if (!bookId) return;
 
-    // Check if the user already voted for this book
     const existingVote = await prisma.bookVote.findUnique({
       where: {
         userId_bookId: {
@@ -26,24 +27,20 @@ export async function ToggleLike(formData: FormData) {
     });
 
     if (existingVote) {
-      // User already liked it, so we toggle it OFF (delete the vote)
       await prisma.bookVote.delete({
         where: { id: existingVote.id },
       });
-      // Decrement the book's total likeCount
       await prisma.book.update({
         where: { id: bookId },
         data: { likeCount: { decrement: 1 } },
       });
     } else {
-      // User hasn't liked it yet, so we toggle it ON (create the vote)
       await prisma.bookVote.create({
         data: {
           userId: dbUser.id,
           bookId: bookId,
         },
       });
-      // Increment the book's total likeCount
       await prisma.book.update({
         where: { id: bookId },
         data: { likeCount: { increment: 1 } },
@@ -54,6 +51,28 @@ export async function ToggleLike(formData: FormData) {
   } catch (error) {
     console.error(error);
     throw new Error("Failed to toggle like.");
+  }
+}
+
+async function updateSummaryInBackground(bookId: string) {
+  try {
+    const dataForAiSummary = await prisma.review.findMany({
+      where: { bookId: bookId },
+      select: {
+        content: true,
+        rating: true,
+      },
+    });
+    const newSummary = await generateBookSummary(dataForAiSummary);
+
+    if (newSummary) {
+      await prisma.book.update({
+        where: { id: bookId },
+        data: { aiSummary: newSummary.trim() },
+      });
+    }
+  } catch (error) {
+    console.error(error);
   }
 }
 
@@ -82,6 +101,19 @@ export async function AddReview(formData: FormData) {
 
     await updateBookAverageRating(bookId);
 
+    const updatedBook = await prisma.book.update({
+      where: { id: bookId },
+      data: { reviewChangeCount: { increment: 1 } },
+    });
+
+    if (updatedBook.reviewChangeCount >= APP_CONFIG.ai.summaryReviewThreshold) {
+      await prisma.book.update({
+        where: { id: bookId },
+        data: { reviewChangeCount: 0 },
+      });
+      updateSummaryInBackground(bookId).catch(console.error);
+    }
+
     revalidatePath(`/books/${bookId}`);
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -91,5 +123,61 @@ export async function AddReview(formData: FormData) {
     }
     console.error(error);
     throw new Error("Failed to publish review.");
+  }
+}
+
+export async function DeleteReview(formData: FormData) {
+  try {
+    const authUser = await requireUser();
+    const reviewId = formData.get("review-id") as string;
+    const bookId = formData.get("book-id") as string;
+
+    if (!reviewId || !bookId) return;
+
+    const review = await prisma.review.findUnique({ where: { id: reviewId } });
+
+    if (!review || review.userId !== authUser.id) {
+      throw new Error("Not authorized to delete this review.");
+    }
+
+    await prisma.review.delete({
+      where: { id: reviewId },
+    });
+
+    await updateBookAverageRating(bookId);
+
+    const remainingReviewsCount = await prisma.review.count({
+      where: { bookId: bookId },
+    });
+
+    if (remainingReviewsCount === 0) {
+      await prisma.book.update({
+        where: { id: bookId },
+        data: {
+          aiSummary: null,
+          reviewChangeCount: 0,
+        },
+      });
+    } else {
+      const updatedBook = await prisma.book.update({
+        where: { id: bookId },
+        data: { reviewChangeCount: { increment: 1 } },
+      });
+
+      if (updatedBook.reviewChangeCount >= APP_CONFIG.ai.summaryReviewThreshold) {
+        await prisma.book.update({
+          where: { id: bookId },
+          data: { reviewChangeCount: 0 },
+        });
+
+        updateSummaryInBackground(bookId).catch(console.error);
+      }
+    }
+
+    revalidatePath(`/books/${bookId}`);
+    revalidatePath("/profile");
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to delete review.");
   }
 }

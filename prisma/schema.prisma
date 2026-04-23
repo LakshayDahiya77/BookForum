@@ -43,6 +43,7 @@ model Book {
   publishYear   Int?
   coverUrl      String?
   aiSummary     String?
+  reviewChangeCount Int @default(0)
 
   // Counters (Optional: You can cache totals here for faster loading, 
   // updating them via database triggers when BookVote changes)

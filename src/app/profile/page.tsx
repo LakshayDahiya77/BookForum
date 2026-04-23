@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import BookGrid from "@/components/BookGrid";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import ReviewCard from "@/components/ReviewCard";
 
 export default async function ProfilePage() {
   const authUser = await requireUser();
@@ -81,31 +82,23 @@ export default async function ProfilePage() {
           )}
         </section>
 
-        {/* written revires */}
+        {/* written reviews */}
         <section>
           <h2 className="text-2xl font-bold mb-4 text-gray-700">Your reviews</h2>
           {user.reviews.length > 0 ? (
             <div className="flex flex-col gap-8">
               {user.reviews.map((review) => (
-                <div
+                <ReviewCard
                   key={review.id}
-                  className="flex flex-col gap-1 border-gray-500 border-2 p-2 rounded-s-sm text-gray-800"
-                >
-                  <Link href={`/books/${review.bookId}`}>
-                    <h3 className="font-bold text-lg hover:underline">{review.book.title}</h3>
-                  </Link>
-                  <div className="flex items-center gap-2"></div>
-                  <span className="text-yellow-600">
-                    {"★".repeat(review.rating)}
-                    {"☆".repeat(5 - review.rating)}
-                  </span>
-                  <span className="text-sm text-gray-700">
-                    {new Date(review.createdAt).toLocaleDateString()}
-                  </span>
-                  <div>
-                    <p>"{review.content}"</p>
-                  </div>
-                </div>
+                  id={review.id}
+                  bookId={review.bookId}
+                  isOwner={true}
+                  user={{ name: user.name, avatarUrl: user.avatarUrl }}
+                  rating={review.rating}
+                  content={review.content}
+                  createdAt={review.createdAt}
+                  bookContext={{ id: review.book.id, title: review.book.title }}
+                />
               ))}
             </div>
           ) : (
