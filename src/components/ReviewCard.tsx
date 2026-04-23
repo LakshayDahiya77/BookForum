@@ -12,7 +12,6 @@ type ReviewCardProps = {
   rating: number;
   content: string;
   createdAt: Date;
-  // Optional: If you pass a bookTitle, it renders a link (useful for the Profile page)
   bookContext?: {
     id: string;
     title: string;

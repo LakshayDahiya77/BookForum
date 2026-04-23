@@ -49,7 +49,7 @@ export default async function AuthorProfilePage({ params }: { params: { id: stri
             <span className="text-xs text-amber-700 font-bold uppercase tracking-wider mb-2 block">
               Admin Controls
             </span>
-            {/* You will eventually wire this to open an Edit Modal */}
+            {/* Open an Edit Modal */}
             <Button variant="secondary">Edit Author</Button>
           </div>
         )}
@@ -69,7 +69,6 @@ export default async function AuthorProfilePage({ params }: { params: { id: stri
                   <img
                     src={book.coverUrl}
                     alt={book.title}
-                    // Changed to a rectangle ratio instead of a circle
                     className="w-full aspect-2/3 rounded-md object-cover"
                   />
                 ) : (

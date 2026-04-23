@@ -1,1 +1,3 @@
-﻿export default function AuthorsPage() { return null; }
+﻿export default function AuthorsPage() {
+  return null;
+}

@@ -5,8 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/buttons/simpleButton";
 import { AddReview, ToggleLike } from "./actions";
-import ReviewCard from "@/components/ReviewCard";
-import { AISummaryCard } from "@/components/ReviewCard";
+import ReviewCard, { AISummaryCard } from "@/components/ReviewCard";
 
 export default async function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const authUser = await requireUser();
@@ -31,90 +30,95 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
       },
     },
   });
+
   const hasUserLikedBook = book?.votes && book.votes.length > 0;
+
   if (!book) {
     notFound();
   }
+
   return (
-    <main>
-      {/* Hero section - book details and cover*/}
-      <div>
-        <div className="flex p-5 max-w-7xl gap-8 outline-blue-200 outline-2">
-          {book.coverUrl && (
-            <Image
-              src={book.coverUrl}
-              alt="Book Cover"
-              width={192}
-              height={288}
-              className="rounded-lg shadow-md object-cover"
-            />
+    <main className="w-full flex-1 max-w-7xl mx-auto py-10 px-4 sm:px-6">
+      {/* Hero section */}
+      <div className="flex gap-8 pb-8 border-b border-border">
+        {book.coverUrl && (
+          <Image
+            src={book.coverUrl}
+            alt="Book Cover"
+            width={192}
+            height={288}
+            loading="eager"
+            className="rounded-md shadow-md object-cover flex-shrink-0"
+          />
+        )}
+
+        <div className="flex flex-col gap-3">
+          <h1 className="text-3xl font-bold text-text-primary">{book.title}</h1>
+          <p className="italic text-text-muted">
+            by{" "}
+            {book.authors?.length
+              ? book.authors.map((author, i) => (
+                  <span key={author.id ?? i}>
+                    <Link
+                      href={`/authors/${author.id}`}
+                      className="font-semibold hover:text-accent transition-colors"
+                    >
+                      {author.name}
+                    </Link>
+                    {i < book.authors.length - 1 ? ", " : ""}
+                  </span>
+                ))
+              : "Unknown Author"}
+          </p>
+          {book.publishYear && (
+            <p className="text-sm text-text-muted">Published: {book.publishYear}</p>
           )}
 
-          {/* Text details */}
-          <div className="flex flex-col gap-4">
-            <h3>{book.title}</h3>
-            <h2 className="italic">
-              by{" "}
-              {book.authors?.length
-                ? book.authors.map((author, i) => (
-                    <span key={author.id ?? i}>
-                      <Link href={`/authors/${author.id}`} className="font-semibold">
-                        {author.name}
-                      </Link>
-                      {i < book.authors.length - 1 ? ", " : ""}
-                    </span>
-                  ))
-                : "Unknown Author"}
-            </h2>
-            <h2>Published: {book.publishYear}</h2>
-
-            <div className="mt-3 flex flex-col gap-2">
-              <div className="flex gap-2 items-center mt-1">
-                <form action={ToggleLike}>
-                  <input type="hidden" name="book-id" value={book.id} />
-                  <Button
-                    type="submit"
-                    variant="ghost"
-                    size="sm"
-                    className={`h-7 text-xs px-2 border ${hasUserLikedBook ? "bg-blue-50 text-blue-700 border-blue-300" : ""}`}
-                  >
-                    {hasUserLikedBook ? "👍 Liked" : "👍 Like"} ({book.likeCount || 0})
-                  </Button>
-                </form>
-                <Button variant="ghost" size="sm" className="h-7 text-xs px-2 border text-gray-700">
-                  ⭐ {book.averageRating || 0}
-                </Button>
-              </div>
-
-              {/* Categories */}
-              {book.categories.length > 0 && (
-                <div className="flex gap-2 mt-2">
-                  {book.categories.map((cat) => (
-                    <Link
-                      key={cat.id}
-                      href={`/categories/${cat.id}`}
-                      className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded border hover:bg-gray-200"
-                    >
-                      {cat.name}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {book.description && (
-              <div className="mt-4 text-gray-800">
-                <h4 className="font-bold mb-1">About this book</h4>
-                <p className="text-sm leading-relaxed">{book.description}</p>
-              </div>
-            )}
+          {/* Like + Rating */}
+          <div className="flex gap-3 items-center mt-1">
+            <form action={ToggleLike}>
+              <input type="hidden" name="book-id" value={book.id} />
+              <Button
+                type="submit"
+                variant="ghost"
+                size="sm"
+                className={`border ${hasUserLikedBook ? "border-accent text-accent" : "border-border text-text-muted"}`}
+              >
+                👍 {hasUserLikedBook ? "Liked" : "Like"} ({book.likeCount || 0})
+              </Button>
+            </form>
+            <span className="text-sm text-text-muted border border-border px-3 py-1 rounded-md">
+              ⭐ {book.averageRating ? book.averageRating.toFixed(1) : "—"}
+            </span>
           </div>
+
+          {/* Categories */}
+          {book.categories.length > 0 && (
+            <div className="flex gap-2 flex-wrap">
+              {book.categories.map((cat) => (
+                <Link
+                  key={cat.id}
+                  href={`/categories/${cat.id}`}
+                  className="text-xs bg-background text-text-muted px-2 py-1 rounded-sm border border-border hover:border-accent hover:text-accent transition-colors"
+                >
+                  {cat.name}
+                </Link>
+              ))}
+            </div>
+          )}
+
+          {book.description && (
+            <div className="mt-2">
+              <h4 className="font-bold text-text-primary mb-1">About this book</h4>
+              <p className="text-sm text-text-muted leading-relaxed">{book.description}</p>
+            </div>
+          )}
         </div>
       </div>
 
-      {/*Publish Your review */}
-      <div className="p-4 border border-gray-200 rounded-md bg-gray-50 flex gap-4 max-w-7xl mx-5 mt-8">
-        <div className="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0 overflow-hidden">
+      {/* Write a review */}
+      <div className="mt-8 bg-surface border border-border rounded-md p-4 flex gap-4">
+        <div className="w-10 h-10 bg-border rounded-full flex-shrink-0 overflow-hidden flex items-center justify-center">
           {dbUser?.avatarUrl ? (
             <img
               src={dbUser.avatarUrl}
@@ -122,33 +126,33 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="flex items-center justify-center h-full w-full text-gray-500 font-bold">
+            <span className="text-text-muted text-sm font-bold">
               {(dbUser?.name || "U")[0].toUpperCase()}
-            </div>
+            </span>
           )}
         </div>
-        <form className="flex-1 font-black" action={AddReview}>
+        <form className="flex-1" action={AddReview}>
           <input type="hidden" name="book-id" value={book.id} />
-          <div className="flex gap-2 mb-2 items-center">
-            <span className="text-sm font-medium text-gray-700">Rating:</span>
+          <div className="flex gap-2 mb-3 items-center">
+            <span className="text-sm text-text-muted">Rating:</span>
             <select
               name="rating"
               required
-              className="border border-gray-300 rounded px-2 py-1 text-sm outline-none focus:border-blue-400"
+              className="bg-background border border-border text-text-primary rounded-md px-2 py-1 text-sm outline-none focus:border-accent"
             >
-              <option value="5">5 - Excellent</option>
-              <option value="4">4 - Good</option>
-              <option value="3">3 - Average</option>
-              <option value="2">2 - Poor</option>
-              <option value="1">1 - Terrible</option>
+              <option value="5">5 — Excellent</option>
+              <option value="4">4 — Good</option>
+              <option value="3">3 — Average</option>
+              <option value="2">2 — Poor</option>
+              <option value="1">1 — Terrible</option>
             </select>
           </div>
           <textarea
-            rows={6}
+            rows={5}
             placeholder="Write your review..."
             name="review-text"
             required
-            className="w-full p-2 border border-gray-300 rounded-md text-sm text-black outline-none focus:border-blue-400"
+            className="w-full p-3 bg-background border border-border text-text-primary rounded-md text-sm outline-none focus:border-accent placeholder:text-text-muted resize-none"
           />
           <Button type="submit" variant="primary" className="mt-2">
             Publish Review
@@ -156,9 +160,11 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
         </form>
       </div>
 
-      {/* Review section */}
-      <div className="p-5 max-w-7xl mt-8 border-t border-gray-200">
-        <h3 className="text-xl font-bold mb-6">Reviews ({book.reviews.length})</h3>
+      {/* Reviews */}
+      <div className="mt-10">
+        <h3 className="text-xl font-bold text-text-primary mb-6">
+          Reviews ({book.reviews.length})
+        </h3>
 
         {book.aiSummary && <AISummaryCard summary={book.aiSummary} />}
 
@@ -178,7 +184,7 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
             ))}
           </div>
         ) : (
-          <p className="text-sm text-gray-500 bg-gray-50 p-6 rounded-md text-center border border-dashed border-gray-300">
+          <p className="text-sm text-text-muted bg-surface p-6 rounded-md text-center border border-dashed border-border">
             No reviews yet. Be the first to review!
           </p>
         )}

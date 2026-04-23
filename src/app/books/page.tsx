@@ -13,10 +13,10 @@ export default async function BooksGridPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
+    <div className="min-h-screen bg-background py-12 px-4">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">All Books</h1>
-        <p className="text-gray-600 mb-8">Discover and explore our entire collection</p>
+        <h1 className="text-4xl font-bold text-text-primary mb-2">All Books</h1>
+        <p className="text-text-muted mb-8">Discover and explore our entire collection</p>
 
         {/* Use your shared component! */}
         <BookGrid books={books} />

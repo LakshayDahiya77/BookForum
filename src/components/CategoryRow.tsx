@@ -35,94 +35,121 @@ export function CategoryRow({ category }: { category: Category }) {
   };
 
   return (
-    <li className="flex items-center justify-between p-3 border border-gray-200 bg-white rounded-md w-full shadow-sm">
+    <li className="flex items-center justify-between p-4 border border-border bg-surface rounded-lg w-full shadow-sm">
       <div className="flex items-center">
         <img
           src={category.icon}
           alt={category.name}
-          className="w-8 h-8 mr-3 object-cover rounded-sm"
+          className="w-10 h-10 mr-4 object-contain rounded bg-background p-1 border border-border"
         />
-        <span className="font-medium text-gray-700">{category.name}</span>
+        <span className="font-bold text-text-primary">{category.name}</span>
       </div>
-      <Button variant="secondary" size="sm" onClick={() => setIsOpen(true)}>
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() => setIsOpen(true)}
+        className="text-xs font-bold uppercase tracking-wider"
+      >
         Edit
       </Button>
 
+      {/* Modal Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">
-              Edit Category : {category.name}
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-md p-4">
+          <div className="bg-surface p-8 rounded-xl shadow-2xl border border-border w-full max-w-md animate-in fade-in zoom-in duration-200">
+            <h2 className="text-2xl font-bold text-text-primary mb-6 border-b border-border pb-4">
+              Edit Category
             </h2>
 
-            <form action={handleUpdate} className="flex flex-col gap-4">
+            <form action={handleUpdate} className="flex flex-col gap-5">
               <input type="hidden" name="id" value={category.id} />
+
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <label className="block text-sm font-bold text-text-primary mb-2">Name</label>
                 <input
                   type="text"
                   name="name"
                   defaultValue={category.name}
-                  className="border border-gray-300 p-2 w-full rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="bg-background border border-border p-3 w-full rounded-md text-text-primary focus:ring-1 focus:ring-accent focus:border-accent outline-none transition-all"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <label className="block text-sm font-bold text-text-primary mb-2">
+                  Description
+                </label>
                 <textarea
                   name="description"
                   defaultValue={category.description || ""}
                   rows={2}
-                  className="border border-gray-300 p-2 w-full rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="bg-background border border-border p-3 w-full rounded-md text-text-primary focus:ring-1 focus:ring-accent focus:border-accent outline-none transition-all resize-none"
                   placeholder="Optional description"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Icon (Max {formatFileSize(UPLOAD_LIMITS.CATEGORY_ICON.maxSize)})
+                <label className="block text-sm font-bold text-text-primary mb-2">
+                  Icon{" "}
+                  <span className="font-normal text-text-muted text-xs">
+                    (Max {formatFileSize(UPLOAD_LIMITS.CATEGORY_ICON.maxSize)})
+                  </span>
                 </label>
-                <div className="flex items-center gap-3 p-2 bg-gray-50 border border-gray-200 rounded-md">
-                  <div className="flex flex-col items-center justify-center shrink-0">
-                    <span className="text-[10px] text-gray-400 mb-1 uppercase font-bold tracking-wider">
-                      Current
+                <div className="flex items-center gap-4 p-3 bg-background border border-border rounded-lg">
+                  <div className="flex flex-col items-center shrink-0">
+                    <span className="text-[10px] text-text-muted mb-1 uppercase font-black tracking-widest">
+                      Active
                     </span>
                     <img
                       src={category.icon}
                       alt={category.name}
-                      className="w-10 h-10 object-cover rounded shadow-sm bg-white"
+                      className="w-12 h-12 object-contain rounded bg-surface p-1 border border-border shadow-inner"
                     />
                   </div>
-                  <div className="text-gray-300 text-lg">→</div>
+                  <div className="text-text-muted text-xl">→</div>
                   <div className="flex-1 min-w-0">
                     <input
                       type="file"
                       name="iconFile"
                       accept="image/*"
-                      className="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer focus:outline-none"
+                      className="w-full text-xs text-text-muted file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-[10px] file:font-black file:uppercase file:bg-accent file:text-background hover:file:bg-accent-hover cursor-pointer outline-none"
                     />
                   </div>
                 </div>
-                <p className="text-xs text-gray-500 mt-1.5 ml-1">
+                <p className="text-[11px] text-text-muted mt-2 italic">
                   Leave empty to keep the current icon
                 </p>
               </div>
 
-              <div className="flex justify-end gap-2 mt-4">
-                <Button variant="primary" type="submit" isLoading={isPending}>
+              <div className="flex justify-end gap-3 mt-4">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  isLoading={isPending}
+                  className="font-bold text-xs uppercase tracking-widest px-6"
+                >
                   Save Changes
                 </Button>
-                <Button variant="ghost" type="button" onClick={() => setIsOpen(false)}>
+                <Button
+                  variant="ghost"
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  className="font-bold text-xs uppercase"
+                >
                   Cancel
                 </Button>
               </div>
             </form>
 
-            <div className="mt-6 pt-4 border-t border-gray-200">
+            <div className="mt-8 pt-6 border-t border-danger/20">
               <form action={handleDelete}>
                 <input type="hidden" name="id" value={category.id} />
-                <Button variant="danger" type="submit" className="w-full" isLoading={isPending}>
+                <Button
+                  variant="danger"
+                  type="submit"
+                  className="w-full font-bold text-xs uppercase tracking-widest"
+                  isLoading={isPending}
+                >
                   Delete Category
                 </Button>
               </form>

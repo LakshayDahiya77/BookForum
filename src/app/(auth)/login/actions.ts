@@ -18,7 +18,6 @@ export async function loginAction(formData: FormData) {
     return { error: error.message };
   }
 
-  // If successful, redirect to the categories page
   redirect("/categories");
 }
 

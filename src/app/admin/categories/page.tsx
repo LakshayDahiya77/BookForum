@@ -8,65 +8,91 @@ import { UPLOAD_LIMITS, formatFileSize } from "@/lib/uploadConfig";
 
 export default async function AdminCategoriesPage() {
   await requireAdmin();
-  const categories = await prisma.category.findMany();
+  const categories = await prisma.category.findMany({
+    orderBy: { name: "asc" },
+  });
+
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen py-10 bg-gray-50 px-4">
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-full max-w-xl m-10">
-        <h1 className="text-xl font-bold text-gray-900 mb-5">Add New Category</h1>
-        <Form action={addCategory} className="flex flex-col gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-            <input
-              type="text"
-              name="name"
-              id="add-category-name"
-              placeholder="e.g. Science Fiction"
-              className="border border-gray-300 p-2 w-full rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              required
-            />
-          </div>
+    <main className="w-full flex-1 max-w-7xl mx-auto py-10 px-4 sm:px-6">
+      <div className="flex flex-col items-center justify-start gap-8">
+        {/* Section 1: Add New Category */}
+        <div className="bg-surface p-8 rounded-xl shadow-sm border border-border w-full max-w-xl">
+          <h1 className="text-2xl font-bold text-text-primary mb-6 border-b border-border pb-4">
+            Add New Category
+          </h1>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <input
-              type="text"
-              name="description"
-              id="add-category-description"
-              placeholder="Some Catchy Line"
-              className="border border-gray-300 p-2 w-full rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            />
-          </div>
+          <Form action={addCategory} className="flex flex-col gap-5">
+            <div>
+              <label className="block text-sm font-bold text-text-primary mb-2">Name</label>
+              <input
+                type="text"
+                name="name"
+                id="add-category-name"
+                placeholder="e.g. Science Fiction"
+                className="bg-background border border-border p-3 w-full rounded-md text-text-primary placeholder:text-text-muted focus:ring-1 focus:ring-accent focus:border-accent outline-none transition-all"
+                required
+              />
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Icon (Max {formatFileSize(UPLOAD_LIMITS.CATEGORY_ICON.maxSize)})
-            </label>
-            <input
-              type="file"
-              name="iconFile"
-              id="add-category-icon"
-              accept="image/*"
-              className="border border-gray-300 p-2 w-full rounded focus:ring-2 focus:ring-blue-500 focus:outline-none file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
-              required
-            />
-          </div>
+            <div>
+              <label className="block text-sm font-bold text-text-primary mb-2">Description</label>
+              <input
+                type="text"
+                name="description"
+                id="add-category-description"
+                placeholder="Brief genre overview..."
+                className="bg-background border border-border p-3 w-full rounded-md text-text-primary placeholder:text-text-muted focus:ring-1 focus:ring-accent focus:border-accent outline-none transition-all"
+              />
+            </div>
 
-          <div className="flex justify-end mt-2">
-            <Button type="submit" variant="primary">
-              Add Category
-            </Button>
-          </div>
-        </Form>
+            <div>
+              <label className="block text-sm font-bold text-text-primary mb-2">
+                Icon{" "}
+                <span className="font-normal text-text-muted">
+                  (Max {formatFileSize(UPLOAD_LIMITS.CATEGORY_ICON.maxSize)})
+                </span>
+              </label>
+              <input
+                type="file"
+                name="iconFile"
+                id="add-category-icon"
+                accept="image/*"
+                className="bg-background border border-border p-2 w-full rounded-md text-text-muted text-sm
+                  file:mr-4 file:py-1.5 file:px-4 file:rounded-md file:border-0 
+                  file:text-xs file:font-bold file:uppercase file:bg-accent 
+                  file:text-background hover:file:bg-accent-hover cursor-pointer transition-all"
+                required
+              />
+            </div>
+
+            <div className="flex justify-end mt-2 pt-4 border-t border-border">
+              <Button
+                type="submit"
+                variant="primary"
+                className="font-bold uppercase tracking-widest text-xs"
+              >
+                Add Category
+              </Button>
+            </div>
+          </Form>
+        </div>
+
+        {/* Section 2: Category List */}
+        <div className="bg-surface p-8 rounded-xl shadow-sm border border-border w-full max-w-xl">
+          <h1 className="text-2xl font-bold text-text-primary mb-6 border-b border-border pb-4">
+            All Categories
+          </h1>
+          {categories.length > 0 ? (
+            <ul className="flex flex-col gap-3">
+              {categories.map((category) => (
+                <CategoryRow key={category.id} category={category} />
+              ))}
+            </ul>
+          ) : (
+            <p className="text-text-muted text-center py-4 italic">No categories created yet.</p>
+          )}
+        </div>
       </div>
-
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-full max-w-xl">
-        <h1 className="text-xl font-bold text-gray-900 mb-5">All Categories</h1>
-        <ul className="flex flex-col gap-3">
-          {categories.map((category) => (
-            <CategoryRow key={category.id} category={category} />
-          ))}
-        </ul>
-      </div>
-    </div>
+    </main>
   );
 }

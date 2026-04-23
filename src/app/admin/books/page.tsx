@@ -8,82 +8,114 @@ import { UPLOAD_LIMITS, formatFileSize } from "@/lib/uploadConfig";
 
 export default async function addNewBook() {
   await requireAdmin();
-  const categories = await prisma.category.findMany();
+  const categories = await prisma.category.findMany({
+    orderBy: { name: "asc" },
+  });
 
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen py-10 bg-gray-50 px-4">
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-full max-w-2xl">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Add New Book</h1>
-        <Form action={addBookAction} className="flex flex-col gap-5">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-            <input
-              type="text"
-              placeholder="Book title"
-              name="title"
-              className="border border-gray-300 p-2 w-full rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              required
-            />
-          </div>
+    <main className="w-full flex-1 max-w-7xl mx-auto py-10 px-4 sm:px-6">
+      <div className="flex flex-col items-center justify-start min-h-screen px-4">
+        {/* Main Form Container */}
+        <div className="bg-surface p-8 rounded-xl shadow-sm border border-border w-full max-w-2xl">
+          <h1 className="text-3xl font-bold text-text-primary mb-8 border-b border-border pb-4">
+            Add New Book
+          </h1>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <textarea
-              placeholder="Book description"
-              name="description"
-              rows={3}
-              className="border border-gray-300 p-2 w-full rounded focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
-            />
-          </div>
+          <Form action={addBookAction} className="flex flex-col gap-6">
+            {/* Title Field */}
+            <div>
+              <label className="block text-sm font-bold text-text-primary mb-2">Title</label>
+              <input
+                type="text"
+                placeholder="The name of the book"
+                name="title"
+                className="bg-background border border-border p-3 w-full rounded-md text-text-primary placeholder:text-text-muted focus:ring-1 focus:ring-accent focus:border-accent outline-none transition-all"
+                required
+              />
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Author(s) (comma separated)
-            </label>
-            <input
-              type="text"
-              placeholder="e.g. George Orwell, Isaac Asimov"
-              name="authors"
-              className="border border-gray-300 p-2 w-full rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              required
-            />
-          </div>
+            {/* Description Field */}
+            <div>
+              <label className="block text-sm font-bold text-text-primary mb-2">Description</label>
+              <textarea
+                placeholder="A brief overview of the book's content..."
+                name="description"
+                rows={4}
+                className="bg-background border border-border p-3 w-full rounded-md text-text-primary placeholder:text-text-muted focus:ring-1 focus:ring-accent focus:border-accent outline-none transition-all resize-y"
+              />
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Cover Image (Max {formatFileSize(UPLOAD_LIMITS.BOOK_COVER.maxSize)})
-            </label>
-            <input
-              type="file"
-              name="cover-file"
-              id="add-book-cover"
-              accept="image/*"
-              className="border border-gray-300 p-2 w-full rounded focus:ring-2 focus:ring-blue-500 focus:outline-none file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
-            />
-          </div>
+            {/* Authors Field */}
+            <div>
+              <label className="block text-sm font-bold text-text-primary mb-2">
+                Author(s){" "}
+                <span className="font-normal text-text-muted italic">(comma separated)</span>
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. George Orwell, Isaac Asimov"
+                name="authors"
+                className="bg-background border border-border p-3 w-full rounded-md text-text-primary placeholder:text-text-muted focus:ring-1 focus:ring-accent focus:border-accent outline-none transition-all"
+                required
+              />
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Publish Year</label>
-            <input
-              type="number"
-              name="publish-year"
-              placeholder="e.g. 1984 or -700 for BC"
-              min="-5000"
-              max={new Date().getFullYear()}
-              className="border border-gray-300 p-2 w-full rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            />
-            <p className="text-xs text-gray-500 mt-1">Use negative numbers for BC/BCE dates.</p>
-          </div>
+            {/* Cover Image Upload */}
+            <div>
+              <label className="block text-sm font-bold text-text-primary mb-2">
+                Cover Image{" "}
+                <span className="font-normal text-text-muted">
+                  (Max {formatFileSize(UPLOAD_LIMITS.BOOK_COVER.maxSize)})
+                </span>
+              </label>
+              <input
+                type="file"
+                name="cover-file"
+                id="add-book-cover"
+                accept="image/*"
+                className="bg-background border border-border p-2 w-full rounded-md text-text-muted text-sm
+                  file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 
+                  file:text-xs file:font-bold file:uppercase file:tracking-wider
+                  file:bg-accent file:text-background hover:file:bg-accent-hover 
+                  cursor-pointer transition-all"
+              />
+            </div>
 
-          <CategorySelector categories={categories} fieldName="category-ids" />
+            {/* Publish Year */}
+            <div>
+              <label className="block text-sm font-bold text-text-primary mb-2">Publish Year</label>
+              <input
+                type="number"
+                name="publish-year"
+                placeholder="e.g. 1984"
+                min="-5000"
+                max={new Date().getFullYear()}
+                className="bg-background border border-border p-3 w-full rounded-md text-text-primary placeholder:text-text-muted focus:ring-1 focus:ring-accent focus:border-accent outline-none transition-all"
+              />
+              <p className="text-xs text-text-muted mt-2">Use negative numbers for BC/BCE dates.</p>
+            </div>
 
-          <div className="flex justify-end mt-4">
-            <Button type="submit" variant="primary">
-              Add Book
-            </Button>
-          </div>
-        </Form>
+            {/* Categories Selector */}
+            <div className="pt-2">
+              <label className="block text-sm font-bold text-text-primary mb-3">
+                Shelves / Categories
+              </label>
+              <CategorySelector categories={categories} fieldName="category-ids" />
+            </div>
+
+            {/* Submit Section */}
+            <div className="flex justify-end mt-6 pt-6 border-t border-border">
+              <Button
+                type="submit"
+                variant="primary"
+                className="px-8 py-2 font-bold uppercase tracking-widest text-xs"
+              >
+                Add Book to Library
+              </Button>
+            </div>
+          </Form>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
