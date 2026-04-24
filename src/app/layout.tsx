@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
-import { Montserrat, Google_Sans } from "next/font/google";
+import { Playfair_Display, DM_Sans } from "next/font/google";
 
-const fontHeading = Montserrat({
+const fontHeading = Playfair_Display({
   variable: "--font-heading",
   subsets: ["latin"],
 });
 
-const fontBody = Google_Sans({
+const fontBody = DM_Sans({
   variable: "--font-body",
   subsets: ["latin"],
 });

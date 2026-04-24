@@ -1,25 +1,34 @@
 import { Suspense } from "react";
+import Link from "next/link";
 
 function ErrorContent({ message }: { message?: string }) {
   return (
-    <div style={{ padding: "2rem", textAlign: "center" }}>
+    <div className="p-8 text-center bg-background text-text-primary">
       <h1>Something went wrong</h1>
       {message ? (
-        <p style={{ color: "#d32f2f", marginTop: "1rem" }}>{message}</p>
+        <p className="text-danger mt-4">{message}</p>
       ) : (
-        <p>An unexpected error occurred. Please try again.</p>
+        <p className="text-text-muted mt-4">An unexpected error occurred. Please try again.</p>
       )}
-      <p style={{ marginTop: "2rem", fontSize: "0.9rem", color: "#666" }}>
-        <a href="/">← Go back</a>
+      <p className="mt-8 text-sm text-text-muted">
+        <Link href="/" className="text-accent hover:underline">
+          ← Go back
+        </Link>
       </p>
     </div>
   );
 }
 
-export default function ErrorPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
+export default async function ErrorPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const resolvedSearchParams = await searchParams;
+
   return (
     <Suspense fallback={<p>Loading...</p>}>
-      <ErrorContent message={(searchParams as any).error} />
+      <ErrorContent message={resolvedSearchParams.error} />
     </Suspense>
   );
 }

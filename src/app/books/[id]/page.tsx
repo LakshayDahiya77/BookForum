@@ -6,10 +6,54 @@ import Link from "next/link";
 import { Button } from "@/components/buttons/simpleButton";
 import { AddReview, ToggleLike } from "./actions";
 import ReviewCard, { AISummaryCard } from "@/components/ReviewCard";
+import MarkdownEditor from "@/components/MarkdownEditor";
+import SortSelect from "@/components/SortSelect";
 
-export default async function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
+const REVIEWS_PER_PAGE = 10;
+
+const reviewSortOptions = [
+  { label: "Newest", value: "newest" },
+  { label: "Oldest", value: "oldest" },
+  { label: "Highest Rated", value: "highest-rated" },
+  { label: "Lowest Rated", value: "lowest-rated" },
+  { label: "Most Liked", value: "most-liked" },
+] as const;
+
+function parsePositiveInt(value: string | string[] | undefined, fallback: number): number {
+  if (!value || Array.isArray(value)) return fallback;
+  const parsed = Number.parseInt(value, 10);
+  return Number.isNaN(parsed) || parsed < 1 ? fallback : parsed;
+}
+
+function reviewOrderBy(sort: string) {
+  switch (sort) {
+    case "oldest":
+      return [{ createdAt: "asc" as const }];
+    case "highest-rated":
+      return [{ rating: "desc" as const }, { createdAt: "desc" as const }];
+    case "lowest-rated":
+      return [{ rating: "asc" as const }, { createdAt: "desc" as const }];
+    case "most-liked":
+      return [{ reviewLikes: "desc" as const }, { createdAt: "desc" as const }];
+    default:
+      return [{ createdAt: "desc" as const }];
+  }
+}
+
+export default async function BookDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const authUser = await requireUser();
   const dbUser = await prisma.user.findUnique({ where: { id: authUser.id } });
+  const resolvedSearchParams = await searchParams;
+  const page = parsePositiveInt(resolvedSearchParams.page, 1);
+  const rawSort = typeof resolvedSearchParams.sort === "string" ? resolvedSearchParams.sort : "";
+  const sort = reviewSortOptions.some((option) => option.value === rawSort) ? rawSort : "newest";
+  const reviewsSkip = (page - 1) * REVIEWS_PER_PAGE;
 
   const { id } = await params;
   const book = await prisma.book.findUnique({
@@ -24,12 +68,24 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
         include: {
           user: true,
         },
-        orderBy: {
-          createdAt: "desc",
-        },
+        orderBy: reviewOrderBy(sort),
+        take: REVIEWS_PER_PAGE,
+        skip: reviewsSkip,
       },
     },
   });
+
+  const totalReviews = await prisma.review.count({
+    where: {
+      bookId: id,
+    },
+  });
+  const totalReviewPages = Math.max(1, Math.ceil(totalReviews / REVIEWS_PER_PAGE));
+  const hasPrevPage = page > 1;
+  const hasNextPage = page < totalReviewPages;
+
+  const pageQuery = new URLSearchParams();
+  pageQuery.set("sort", sort);
 
   const hasUserLikedBook = book?.votes && book.votes.length > 0;
 
@@ -48,7 +104,7 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
             width={192}
             height={288}
             loading="eager"
-            className="rounded-md shadow-md object-cover flex-shrink-0"
+            className="rounded-md shadow-md object-cover shrink-0"
           />
         )}
 
@@ -118,7 +174,7 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
 
       {/* Write a review */}
       <div className="mt-8 bg-surface border border-border rounded-md p-4 flex gap-4">
-        <div className="w-10 h-10 bg-border rounded-full flex-shrink-0 overflow-hidden flex items-center justify-center">
+        <div className="w-10 h-10 bg-border rounded-full shrink-0 overflow-hidden flex items-center justify-center">
           {dbUser?.avatarUrl ? (
             <img
               src={dbUser.avatarUrl}
@@ -138,8 +194,12 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
             <select
               name="rating"
               required
+              defaultValue=""
               className="bg-background border border-border text-text-primary rounded-md px-2 py-1 text-sm outline-none focus:border-accent"
             >
+              <option value="" disabled>
+                Select rating...
+              </option>
               <option value="5">5 — Excellent</option>
               <option value="4">4 — Good</option>
               <option value="3">3 — Average</option>
@@ -147,13 +207,7 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
               <option value="1">1 — Terrible</option>
             </select>
           </div>
-          <textarea
-            rows={5}
-            placeholder="Write your review..."
-            name="review-text"
-            required
-            className="w-full p-3 bg-background border border-border text-text-primary rounded-md text-sm outline-none focus:border-accent placeholder:text-text-muted resize-none"
-          />
+          <MarkdownEditor name="review-text" placeholder="Write your review..." />
           <Button type="submit" variant="primary" className="mt-2">
             Publish Review
           </Button>
@@ -162,9 +216,10 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
 
       {/* Reviews */}
       <div className="mt-10">
-        <h3 className="text-xl font-bold text-text-primary mb-6">
-          Reviews ({book.reviews.length})
-        </h3>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
+          <h3 className="text-xl font-bold text-text-primary">Reviews ({totalReviews})</h3>
+          <SortSelect value={sort} options={[...reviewSortOptions]} />
+        </div>
 
         {book.aiSummary && <AISummaryCard summary={book.aiSummary} />}
 
@@ -179,6 +234,7 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
                 user={review.user}
                 rating={review.rating}
                 content={review.content}
+                reviewLikes={review.reviewLikes}
                 createdAt={review.createdAt}
               />
             ))}
@@ -188,6 +244,36 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
             No reviews yet. Be the first to review!
           </p>
         )}
+
+        <div className="mt-6 flex items-center justify-between border-t border-border pt-4">
+          {hasPrevPage ? (
+            <Link
+              href={`/books/${book.id}?${new URLSearchParams({ ...Object.fromEntries(pageQuery), page: String(page - 1) }).toString()}`}
+              className="px-3 py-1.5 text-sm border border-border rounded-md text-text-primary hover:border-accent hover:text-accent transition-colors"
+            >
+              Previous
+            </Link>
+          ) : (
+            <span className="px-3 py-1.5 text-sm border border-border rounded-md text-text-muted opacity-60">
+              Previous
+            </span>
+          )}
+          <span className="text-sm text-text-muted">
+            Page {Math.min(page, totalReviewPages)} of {totalReviewPages}
+          </span>
+          {hasNextPage ? (
+            <Link
+              href={`/books/${book.id}?${new URLSearchParams({ ...Object.fromEntries(pageQuery), page: String(page + 1) }).toString()}`}
+              className="px-3 py-1.5 text-sm border border-border rounded-md text-text-primary hover:border-accent hover:text-accent transition-colors"
+            >
+              Next
+            </Link>
+          ) : (
+            <span className="px-3 py-1.5 text-sm border border-border rounded-md text-text-muted opacity-60">
+              Next
+            </span>
+          )}
+        </div>
       </div>
     </main>
   );

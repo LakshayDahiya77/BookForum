@@ -194,3 +194,47 @@ export async function DeleteReview(formData: FormData) {
     throw new Error("Failed to delete review.");
   }
 }
+
+export async function ToggleReviewLike(formData: FormData) {
+  const authUser = await requireUser();
+  if (!authUser?.id) {
+    throw new Error("Not authenticated.");
+  }
+
+  const reviewId = formData.get("review-id") as string;
+  const bookId = formData.get("book-id") as string;
+  const likedRaw = formData.get("liked") as string;
+  const liked = likedRaw === "true";
+
+  if (!reviewId || !bookId) return;
+
+  if (liked) {
+    await prisma.review.updateMany({
+      where: {
+        id: reviewId,
+        reviewLikes: {
+          gt: 0,
+        },
+      },
+      data: {
+        reviewLikes: {
+          decrement: 1,
+        },
+      },
+    });
+  } else {
+    await prisma.review.update({
+      where: {
+        id: reviewId,
+      },
+      data: {
+        reviewLikes: {
+          increment: 1,
+        },
+      },
+    });
+  }
+
+  revalidatePath(`/books/${bookId}`);
+  revalidatePath("/profile");
+}

@@ -34,19 +34,19 @@ export default async function AuthorProfilePage({ params }: { params: { id: stri
             className="w-32 h-32 rounded-full object-cover"
           ></img>
         ) : (
-          <div className="w-32 h-32 rounded-full bg-slate-200 flex items-center justify-center text-slate-800">
+          <div className="w-32 h-32 rounded-full bg-surface border border-border flex items-center justify-center text-text-primary">
             No Photo
           </div>
         )}
         {/* Author Name with Bio (with fallback if bio is null) */}
         <div>
           <h2 className="text-3xl font-bold">{author.name}</h2>
-          {author.bio && <p className="text-slate-600 mt-2 max-w-xl">{author.bio}</p>}
+          {author.bio && <p className="text-text-muted mt-2 max-w-xl">{author.bio}</p>}
         </div>
         {/* --- INLINE ADMIN CONTROLS --- */}
         {isAdmin && (
-          <div className="bg-amber-50 border border-amber-200 p-3 rounded-md">
-            <span className="text-xs text-amber-700 font-bold uppercase tracking-wider mb-2 block">
+          <div className="bg-surface border border-border p-3 rounded-md">
+            <span className="text-xs text-accent font-bold uppercase tracking-wider mb-2 block">
               Admin Controls
             </span>
             {/* Open an Edit Modal */}
@@ -60,11 +60,14 @@ export default async function AuthorProfilePage({ params }: { params: { id: stri
         <h2 className="text-2xl font-bold mb-6">Books by {author.name}</h2>
 
         {author.books.length === 0 ? (
-          <p className="text-slate-500">No books found for this author yet.</p>
+          <p className="text-text-muted">No books found for this author yet.</p>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {author.books.map((book) => (
-              <div key={book.id} className="border rounded-md p-4 flex flex-col gap-3">
+              <div
+                key={book.id}
+                className="border border-border rounded-md p-4 flex flex-col gap-3 bg-surface"
+              >
                 {book.coverUrl ? (
                   <img
                     src={book.coverUrl}
@@ -72,7 +75,7 @@ export default async function AuthorProfilePage({ params }: { params: { id: stri
                     className="w-full aspect-2/3 rounded-md object-cover"
                   />
                 ) : (
-                  <div className="w-full aspect-2/3 rounded-md bg-slate-200 flex items-center justify-center text-slate-800 text-center p-4">
+                  <div className="w-full aspect-2/3 rounded-md bg-background border border-border flex items-center justify-center text-text-primary text-center p-4">
                     No Cover Photo
                   </div>
                 )}

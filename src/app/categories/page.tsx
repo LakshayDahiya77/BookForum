@@ -32,7 +32,7 @@ export default async function CategoriesPage() {
               <h2 className="text-lg font-bold text-text-primary leading-tight mb-1">
                 {category.name}
               </h2>
-              <p className="text-[0.8rem] text-gray-500 line-clamp-2">{category.description}</p>
+              <p className="text-[0.8rem] text-text-muted line-clamp-2">{category.description}</p>
             </Link>
           ))}
         </div>

@@ -51,7 +51,7 @@ export default async function Header() {
           <div className="flex items-center gap-2 md:gap-4">
             {dbUser.isAdmin && (
               <Link
-                href="/admin/books"
+                href="/admin"
                 className="text-xs font-bold text-accent border border-accent px-2 py-1 md:px-3 md:py-1.5 rounded-md hover:bg-accent hover:text-background transition-colors"
               >
                 Admin
@@ -62,7 +62,7 @@ export default async function Header() {
               href="/profile"
               className="flex items-center gap-2 hover:opacity-80 transition-opacity"
             >
-              <div className="w-8 h-8 rounded-full bg-border overflow-hidden flex-shrink-0">
+              <div className="w-8 h-8 rounded-full bg-border overflow-hidden shrink-0">
                 {dbUser.avatarUrl ? (
                   <img src={dbUser.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
                 ) : (
