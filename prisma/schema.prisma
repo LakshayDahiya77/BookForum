@@ -12,6 +12,7 @@ model User {
   name      String?
   avatarUrl String?
   isAdmin   Boolean    @default(false)
+  createdAt DateTime   @default(now())
   
   reviews   Review[]
   favorites Book[]     // Implicit Many-to-Many
@@ -32,6 +33,7 @@ model Category {
   name      String   @unique
   description String?
   icon      String
+  bookCount Int      @default(0)
   
   books     Book[]   // Implicit Many-to-Many
 }
@@ -44,6 +46,8 @@ model Book {
   coverUrl      String?
   aiSummary     String?
   reviewChangeCount Int @default(0)
+  createdAt     DateTime @default(now())
+  reviewCount   Int      @default(0)
 
   // Counters (Optional: You can cache totals here for faster loading, 
   // updating them via database triggers when BookVote changes)

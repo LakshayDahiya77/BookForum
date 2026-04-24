@@ -61,6 +61,14 @@ export async function addBookAction(formData: FormData) {
     },
   });
 
+  // Increment bookCount for each connected category
+  for (const categoryId of categoryIds) {
+    await prisma.category.update({
+      where: { id: categoryId },
+      data: { bookCount: { increment: 1 } },
+    });
+  }
+
   revalidatePath("/admin/books");
   redirect("/admin/books");
 }

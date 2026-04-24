@@ -103,7 +103,10 @@ export async function AddReview(formData: FormData) {
 
     const updatedBook = await prisma.book.update({
       where: { id: bookId },
-      data: { reviewChangeCount: { increment: 1 } },
+      data: {
+        reviewChangeCount: { increment: 1 },
+        reviewCount: { increment: 1 },
+      },
     });
 
     if (updatedBook.reviewChangeCount >= APP_CONFIG.ai.summaryReviewThreshold) {
@@ -150,18 +153,28 @@ export async function DeleteReview(formData: FormData) {
       where: { bookId: bookId },
     });
 
+    // Fetch current book state to safely decrement reviewCount
+    const currentBook = await prisma.book.findUnique({
+      where: { id: bookId },
+      select: { reviewCount: true },
+    });
+
     if (remainingReviewsCount === 0) {
       await prisma.book.update({
         where: { id: bookId },
         data: {
           aiSummary: null,
           reviewChangeCount: 0,
+          reviewCount: Math.max(0, (currentBook?.reviewCount ?? 0) - 1),
         },
       });
     } else {
       const updatedBook = await prisma.book.update({
         where: { id: bookId },
-        data: { reviewChangeCount: { increment: 1 } },
+        data: {
+          reviewChangeCount: { increment: 1 },
+          reviewCount: Math.max(0, (currentBook?.reviewCount ?? 0) - 1),
+        },
       });
 
       if (updatedBook.reviewChangeCount >= APP_CONFIG.ai.summaryReviewThreshold) {
