@@ -108,3 +108,40 @@ export function AISummaryCard({ summary }: { summary: string }) {
     </div>
   );
 }
+
+export function ReviewSnippetCard({
+  userName,
+  content,
+  rating,
+  reviewLikes,
+  bookId,
+  bookTitle,
+}: {
+  userName: string;
+  content: string;
+  rating: number;
+  reviewLikes: number;
+  bookId: string;
+  bookTitle: string;
+}) {
+  return (
+    <Link href={`/books/${bookId}`} className="block hover:opacity-90 transition-opacity">
+      <div className="bg-surface border border-border rounded-md p-4 flex flex-col gap-3 h-full">
+        {/* Book title */}
+        <p className="text-xs text-accent font-medium italic line-clamp-1">{bookTitle}</p>
+        {/* Rating */}
+        <div className="text-yellow-500 text-xs">
+          {"★".repeat(rating)}
+          {"☆".repeat(5 - rating)}
+        </div>
+        {/* Review text */}
+        <p className="text-sm text-text-muted line-clamp-2 leading-relaxed flex-1">{content}</p>
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-1 border-t border-border">
+          <span className="text-xs font-medium text-text-primary">{userName || "Anonymous"}</span>
+          <span className="text-xs text-text-muted">❤️ {reviewLikes}</span>
+        </div>
+      </div>
+    </Link>
+  );
+}
