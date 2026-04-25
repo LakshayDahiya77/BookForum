@@ -5,6 +5,7 @@ import { signOutAction } from "./headerActions";
 import { Button } from "@/components/buttons/simpleButton";
 import ThemeToggle from "./ThemeToggle";
 import Image from "next/image";
+import { BookOpen, LogOut } from "lucide-react";
 
 export default async function Header() {
   const supabase = await createClient();
@@ -36,8 +37,12 @@ export default async function Header() {
         </Link>
         {/* Nav hidden on mobile */}
         <nav className="hidden md:flex gap-4 text-sm font-medium text-text-muted">
-          <Link href="/books" className="hover:text-text-primary transition-colors">
-            Books
+          <Link
+            href="/books"
+            className="hover:text-text-primary transition-colors inline-flex items-center gap-1.5"
+          >
+            <BookOpen className="w-4 h-4" />
+            <span>Books</span>
           </Link>
           <Link href="/categories" className="hover:text-text-primary transition-colors">
             Categories
@@ -82,9 +87,10 @@ export default async function Header() {
                 type="submit"
                 variant="ghost"
                 size="sm"
-                className="text-text-muted hover:text-text-primary text-xs md:text-sm px-2 md:px-3"
+                className="text-text-muted hover:text-text-primary text-xs md:text-sm px-2 md:px-3 hover:scale-110 transition-transform duration-150 inline-flex items-center gap-1"
               >
-                Sign Out
+                <LogOut className="w-4 h-4" />
+                <span>Sign Out</span>
               </Button>
             </form>
           </div>

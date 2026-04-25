@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Star, ThumbsUp } from "lucide-react";
 
 type BookCardProps = {
   id: string;
@@ -49,8 +50,25 @@ export default function BookCard({
 
           <div className="mt-3 flex flex-col gap-2">
             <div className="flex gap-3 text-sm text-text-muted">
-              <span>👍 {likeCount || 0}</span>
-              <span>⭐ {averageRating || 0}</span>
+              <span className="inline-flex items-center gap-1">
+                <ThumbsUp className="w-4 h-4 text-text-muted" />
+                {likeCount || 0}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="flex gap-0.5">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <Star
+                      key={i}
+                      className={`w-3.5 h-3.5 ${
+                        i <= Math.round(averageRating || 0)
+                          ? "fill-accent text-accent"
+                          : "text-border"
+                      }`}
+                    />
+                  ))}
+                </span>
+                <span>{averageRating || 0}</span>
+              </span>
             </div>
             {categories.length > 0 && (
               <div className="flex flex-wrap gap-1">

@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { ReviewSnippetCard } from "@/components/ReviewCard";
 import SortSelect from "@/components/SortSelect";
 import { updateAvatar } from "./actions";
+import { Edit2, ThumbsUp } from "lucide-react";
 
 const reviewSortOptions = [
   { label: "Newest", value: "newest" },
@@ -144,8 +145,14 @@ export default async function ProfilePage({
             <h1 className="text-3xl font-bold text-text-primary">{user.name || "Reader"}</h1>
             <p className="text-text-muted">{user.email}</p>
             <div className="mt-2 flex gap-4 text-sm text-text-muted font-medium">
-              <span>👍 {user._count.bookVotes} Books Liked</span>
-              <span>📝 {user._count.reviews} Reviews Written</span>
+              <span className="inline-flex items-center gap-1.5">
+                <ThumbsUp className="w-4 h-4" />
+                {user._count.bookVotes} Books Liked
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Edit2 className="w-4 h-4" />
+                {user._count.reviews} Reviews Written
+              </span>
             </div>
           </div>
         </div>

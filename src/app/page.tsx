@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import BookCard from "@/components/BookCard";
 import { ReviewSnippetCard } from "@/components/ReviewCard";
+import SearchBar from "@/components/SearchBar";
+import { ArrowRight } from "lucide-react";
 
 export default async function HomePage() {
   await requireUser();
@@ -44,21 +46,7 @@ export default async function HomePage() {
         <p className="text-text-muted text-center max-w-md">
           Discover, discuss, and share the books that matter to you.
         </p>
-        {/* Search bar */}
-        <form action="/books" method="GET" className="w-full max-w-lg flex gap-2">
-          <input
-            type="text"
-            name="q"
-            placeholder="Search by title or author..."
-            className="flex-1 bg-surface border border-border text-text-primary placeholder:text-text-muted rounded-md px-4 py-2 text-sm outline-none focus:border-accent"
-          />
-          <button
-            type="submit"
-            className="bg-accent hover:bg-accent-hover text-background font-medium px-5 py-2 rounded-md text-sm transition-colors"
-          >
-            Search
-          </button>
-        </form>
+        <SearchBar />
       </section>
 
       {/* Trending Books */}
@@ -68,9 +56,10 @@ export default async function HomePage() {
             <h2 className="text-2xl font-bold text-text-primary">Trending Now</h2>
             <Link
               href="/books"
-              className="text-sm text-accent hover:text-accent-hover transition-colors"
+              className="text-sm text-accent hover:text-accent-hover transition-colors inline-flex items-center gap-1"
             >
-              View all →
+              <span>View all</span>
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -110,9 +99,10 @@ export default async function HomePage() {
             <h2 className="text-2xl font-bold text-text-primary">Recently Added</h2>
             <Link
               href="/books"
-              className="text-sm text-accent hover:text-accent-hover transition-colors"
+              className="text-sm text-accent hover:text-accent-hover transition-colors inline-flex items-center gap-1"
             >
-              View all →
+              <span>View all</span>
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

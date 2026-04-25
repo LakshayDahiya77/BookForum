@@ -2,6 +2,7 @@ import Link from "next/link";
 import { DeleteReview, ToggleReviewLike } from "@/app/books/[id]/actions";
 import ReviewLikeButton from "@/components/ReviewLikeButton";
 import MarkdownPreview from "@/components/MarkdownPreview";
+import { Heart, Sparkles, Star, Trash2 } from "lucide-react";
 
 type ReviewCardProps = {
   id: string;
@@ -70,14 +71,22 @@ export default function ReviewCard({
             <form action={DeleteReview}>
               <input type="hidden" name="review-id" value={id} />
               <input type="hidden" name="book-id" value={bookId} />
-              <button type="submit" className="text-xs font-semibold text-danger hover:underline">
-                Delete
+              <button
+                type="submit"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-danger hover:scale-110 transition-transform duration-150"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Delete</span>
               </button>
             </form>
           )}
-          <div className="text-accent text-sm mb-2">
-            {"★".repeat(rating)}
-            {"☆".repeat(5 - rating)}
+          <div className="flex gap-0.5 mb-2">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Star
+                key={i}
+                className={`w-3.5 h-3.5 ${i <= rating ? "fill-accent text-accent" : "text-border"}`}
+              />
+            ))}
           </div>
           <MarkdownPreview
             source={content}
@@ -106,7 +115,7 @@ export function AISummaryCard({ summary }: { summary: string }) {
       <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-accent/10 rounded-full blur-2xl opacity-50"></div>
 
       <div className="relative z-10 flex gap-4 items-start">
-        <div className="text-2xl mt-1">✨</div>
+        <Sparkles className="w-6 h-6 text-accent mt-1" />
         <div>
           <h3 className="font-bold text-text-primary mb-2 flex items-center gap-2">
             What Readers Are Saying
@@ -142,9 +151,13 @@ export function ReviewSnippetCard({
         {/* Book title */}
         <p className="text-xs text-accent font-medium italic line-clamp-1">{bookTitle}</p>
         {/* Rating */}
-        <div className="text-accent text-xs">
-          {"★".repeat(rating)}
-          {"☆".repeat(5 - rating)}
+        <div className="flex gap-0.5">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <Star
+              key={i}
+              className={`w-3.5 h-3.5 ${i <= rating ? "fill-accent text-accent" : "text-border"}`}
+            />
+          ))}
         </div>
         {/* Review text */}
         <MarkdownPreview
@@ -154,7 +167,10 @@ export function ReviewSnippetCard({
         {/* Footer */}
         <div className="flex items-center justify-between pt-1 border-t border-border">
           <span className="text-xs font-medium text-text-primary">{userName || "Anonymous"}</span>
-          <span className="text-xs text-text-muted">❤️ {reviewLikes}</span>
+          <span className="text-xs text-text-muted inline-flex items-center gap-1">
+            <Heart className="w-3.5 h-3.5 text-text-muted" />
+            {reviewLikes}
+          </span>
         </div>
       </div>
     </Link>

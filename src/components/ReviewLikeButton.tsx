@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { Heart } from "lucide-react";
 
 type ReviewLikeButtonProps = {
   reviewId: string;
@@ -34,9 +35,16 @@ export default function ReviewLikeButton({
           setLiked((prev) => !prev);
         });
       }}
-      className="text-xs font-semibold text-text-muted hover:text-accent transition-colors disabled:opacity-60"
+      className="text-xs font-semibold text-text-muted disabled:opacity-60 hover:scale-110 transition-transform duration-150"
     >
-      {liked ? "Unlike" : "Like"} ({visibleLikes})
+      <span className="inline-flex items-center gap-1">
+        <Heart
+          className={`w-4 h-4 transition-all duration-200 ${
+            liked ? "fill-danger text-danger scale-110" : "text-text-muted scale-100"
+          }`}
+        />
+        <span>{visibleLikes}</span>
+      </span>
     </button>
   );
 }

@@ -3,6 +3,7 @@ import { requireUser } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { Star, ThumbsUp } from "lucide-react";
 import { Button } from "@/components/buttons/simpleButton";
 import { AddReview, ToggleLike } from "./actions";
 import ReviewCard, { AISummaryCard } from "@/components/ReviewCard";
@@ -138,13 +139,34 @@ export default async function BookDetailPage({
                 type="submit"
                 variant="ghost"
                 size="sm"
-                className={`border ${hasUserLikedBook ? "border-accent text-accent" : "border-border text-text-muted"}`}
+                className={`border hover:scale-110 transition-transform duration-150 ${hasUserLikedBook ? "border-accent text-accent" : "border-border text-text-muted"}`}
               >
-                👍 {hasUserLikedBook ? "Liked" : "Like"} ({book.likeCount || 0})
+                <ThumbsUp
+                  className={`w-4 h-4 mr-1 transition-all duration-200 ${
+                    hasUserLikedBook
+                      ? "fill-accent text-accent scale-110"
+                      : "text-text-muted scale-100"
+                  }`}
+                />
+                {hasUserLikedBook ? "Liked" : "Like"} ({book.likeCount || 0})
               </Button>
             </form>
             <span className="text-sm text-text-muted border border-border px-3 py-1 rounded-md">
-              ⭐ {book.averageRating ? book.averageRating.toFixed(1) : "—"}
+              <span className="inline-flex items-center gap-2">
+                <span className="flex gap-0.5">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <Star
+                      key={i}
+                      className={`w-3.5 h-3.5 ${
+                        i <= Math.round(book.averageRating || 0)
+                          ? "fill-accent text-accent"
+                          : "text-border"
+                      }`}
+                    />
+                  ))}
+                </span>
+                {book.averageRating ? book.averageRating.toFixed(1) : "—"}
+              </span>
             </span>
           </div>
 
@@ -198,7 +220,7 @@ export default async function BookDetailPage({
               className="bg-background border border-border text-text-primary rounded-md px-2 py-1 text-sm outline-none focus:border-accent"
             >
               <option value="" disabled>
-                Select rating...
+                Select a rating...
               </option>
               <option value="5">5 — Excellent</option>
               <option value="4">4 — Good</option>

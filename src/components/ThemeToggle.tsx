@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useSyncExternalStore } from "react";
+import { Moon, Sun } from "lucide-react";
 
 type Theme = "dark" | "light";
 
@@ -34,8 +35,13 @@ export default function ThemeToggle() {
   }
 
   return (
-    <button onClick={toggle} className="text-lg" title="Toggle theme">
-      {theme === "dark" ? "☀️" : "🌙"}
+    <button
+      onClick={toggle}
+      className="text-text-muted hover:text-text-primary hover:scale-110 transition-transform duration-150"
+      title="Toggle theme"
+      aria-label="Toggle theme"
+    >
+      {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
     </button>
   );
 }

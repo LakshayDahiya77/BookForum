@@ -5,6 +5,7 @@ import { Button } from "@/components/buttons/simpleButton";
 import { updateCategory, deleteCategory } from "@/app/admin/categories/actions";
 import { UPLOAD_LIMITS, formatFileSize } from "@/lib/uploadConfig";
 import type { Category } from "@prisma/client";
+import { ArrowRight, Edit2, Trash2 } from "lucide-react";
 
 export function CategoryRow({ category }: { category: Category }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -48,9 +49,10 @@ export function CategoryRow({ category }: { category: Category }) {
         variant="secondary"
         size="sm"
         onClick={() => setIsOpen(true)}
-        className="text-xs font-bold uppercase tracking-wider"
+        className="text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1.5 hover:scale-110 transition-transform duration-150"
       >
-        Edit
+        <Edit2 className="w-3.5 h-3.5" />
+        <span>Edit</span>
       </Button>
 
       {/* Modal Overlay */}
@@ -106,7 +108,7 @@ export function CategoryRow({ category }: { category: Category }) {
                       className="w-12 h-12 object-contain rounded bg-surface p-1 border border-border shadow-inner"
                     />
                   </div>
-                  <div className="text-text-muted text-xl">→</div>
+                  <ArrowRight className="w-5 h-5 text-text-muted" />
                   <div className="flex-1 min-w-0">
                     <input
                       type="file"
@@ -147,10 +149,11 @@ export function CategoryRow({ category }: { category: Category }) {
                 <Button
                   variant="danger"
                   type="submit"
-                  className="w-full font-bold text-xs uppercase tracking-widest"
+                  className="w-full font-bold text-xs uppercase tracking-widest inline-flex items-center justify-center gap-1.5 hover:scale-110 transition-transform duration-150"
                   isLoading={isPending}
                 >
-                  Delete Category
+                  <Trash2 className="w-4 h-4" />
+                  <span>Delete Category</span>
                 </Button>
               </form>
             </div>

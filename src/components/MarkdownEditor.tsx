@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 
 type MarkdownEditorProps = {
@@ -9,12 +9,10 @@ type MarkdownEditorProps = {
 
 export default function MarkdownEditor({ name, placeholder }: MarkdownEditorProps) {
   const [value, setValue] = useState("");
-  const [colorMode, setColorMode] = useState<"dark" | "light">("dark");
-
-  useEffect(() => {
-    const isLight = document.documentElement.classList.contains("light");
-    setColorMode(isLight ? "light" : "dark");
-  }, []);
+  const [colorMode] = useState<"dark" | "light">(() => {
+    if (typeof document === "undefined") return "dark";
+    return document.documentElement.classList.contains("light") ? "light" : "dark";
+  });
 
   return (
     <div suppressHydrationWarning>

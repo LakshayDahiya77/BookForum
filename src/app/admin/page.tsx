@@ -8,6 +8,7 @@ import { Button } from "@/components/buttons/simpleButton";
 import { CategorySelector } from "@/components/CategorySelector";
 import { CategoryRow } from "@/components/CategoryRow";
 import { UPLOAD_LIMITS, formatFileSize } from "@/lib/uploadConfig";
+import { BookOpen, Bookmark, Edit2 } from "lucide-react";
 
 function tabHref(tab: string) {
   return `/admin?tab=${tab}`;
@@ -41,7 +42,7 @@ export default async function AdminPage({
               : "border-transparent text-text-muted hover:text-text-primary hover:bg-surface"
           }`}
         >
-          <span>📚</span>
+          <BookOpen className="w-4 h-4" />
           Books
         </Link>
         <Link
@@ -52,7 +53,7 @@ export default async function AdminPage({
               : "border-transparent text-text-muted hover:text-text-primary hover:bg-surface"
           }`}
         >
-          <span>📁</span>
+          <Bookmark className="w-4 h-4" />
           Categories
         </Link>
         <Link
@@ -63,7 +64,7 @@ export default async function AdminPage({
               : "border-transparent text-text-muted hover:text-text-primary hover:bg-surface"
           }`}
         >
-          <span>✍️</span>
+          <Edit2 className="w-4 h-4" />
           Authors
         </Link>
       </div>
