@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
-import { Playfair_Display, DM_Sans } from "next/font/google";
+import { Playfair_Display, DM_Sans, Montserrat } from "next/font/google";
 
-const fontHeading = Playfair_Display({
+const fontHeading = Montserrat({
   variable: "--font-heading",
   subsets: ["latin"],
 });
