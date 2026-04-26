@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+  engineType = "client"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+model User {
+  id        String     @id @default(uuid())
+  email     String     @unique
+  name      String?
+  avatarUrl String?
+  isAdmin   Boolean    @default(false)
+  createdAt DateTime   @default(now())
+  
+  reviews   Review[]
+  favorites Book[]     // Implicit Many-to-Many
+  bookVotes BookVote[] // Tracks their likes/dislikes
+}
+
+model Author {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  bio       String?
+  photoUrl  String?
+  
+  books     Book[]   // Implicit Many-to-Many
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  description String?
+  icon      String
+  bookCount Int      @default(0)
+  
+  books     Book[]   // Implicit Many-to-Many
+}
+
+model Book {
+  id            String   @id @default(uuid())
+  title         String
+  description   String?
+  publishYear   Int?
+  coverUrl      String?
+  aiSummary     String?
+  reviewChangeCount Int @default(0)
+  createdAt     DateTime @default(now())
+  reviewCount   Int      @default(0)
+
+  // Counters (Optional: You can cache totals here for faster loading, 
+  // updating them via database triggers when BookVote changes)
+  likeCount     Int      @default(0)
+  averageRating Float    @default(0)
+
+  // Relations
+  authors       Author[]   // Implicit Many-to-Many
+  categories    Category[] // Implicit Many-to-Many
+  reviews       Review[]
+  favoritedBy   User[]     // Implicit Many-to-Many
+  votes         BookVote[]
+}
+
+model BookVote {
+  id        String   @id @default(uuid())
+  userId    String
+  bookId    String
+  
+  user      User     @relation(fields: [userId], references: [id])
+  book      Book     @relation(fields: [bookId], references: [id])
+
+  // This ensures one user can only have one active vote per book
+  @@unique([userId, bookId]) 
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  content   String
+  rating      Int      // e.g., 1 to 5
+  reviewLikes Int      @default(0)
+  createdAt   DateTime @default(now())
+  
+  userId    String
+  bookId    String
+  user      User     @relation(fields: [userId], references: [id])
+  book      Book     @relation(fields: [bookId], references: [id])
+
+  // This strictly enforces one review per user, per book at the database level
+  @@unique([userId, bookId])
+}

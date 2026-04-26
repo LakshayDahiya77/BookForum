@@ -1,24 +1,36 @@
-LITERARY INSIGHTS
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-This project is a web platform designed for book enthusiasts to publish reviews, interact with other members, and discover new books. 
+## Getting Started
 
+First, run the development server:
 
-FEATURES
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-Publish Reviews: Users can publish reviews of books they've read, sharing their thoughts and insights with the community.
-Like Reviews: Members can like reviews posted by others, showing appreciation for well-written or helpful content.
-Add to Favorites: Users have the ability to add books to their favorites list, creating a personalized collection of recommended reads.
-Summarize Reviews: Integration with the ChatGPT API allows for the automatic summarization of reviews, providing concise overviews for quick reading.
-Add New Books: Admins can easily add new books to the platform, expanding the database for users to explore.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-CONTRIBUTORS
-1. Lakshay Dahiya
-2. Harsh Kishor
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-Screenshots
+## Learn More
 
-![sign up](https://github.com/LakshayDahiya77/BookForum/assets/146033699/ba550cda-5de8-49cb-bc69-72a0552f40be)
-![home page](https://github.com/LakshayDahiya77/BookForum/assets/146033699/c26f91f8-4b95-4d85-be63-e78d0d60d7ac)
-![genre page](https://github.com/LakshayDahiya77/BookForum/assets/146033699/4918e8cd-3b3c-4788-a6b5-c7f9993a167d)
-![review page - summarized](https://github.com/LakshayDahiya77/BookForum/assets/146033699/d46955bc-c1ab-4837-ab89-1c735a04c7f2)
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

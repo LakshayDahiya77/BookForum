@@ -1,0 +1,108 @@
+@import "tailwindcss";
+@import "@uiw/react-md-editor/markdown-editor.css";
+@import "@uiw/react-markdown-preview/markdown.css";
+
+@theme inline {
+  /* Semantic Font Mapping */
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-heading);
+
+  /* Accent Colors */
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+
+  /* Semantic UI Colors */
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-text-primary: var(--text-primary);
+  --color-text-muted: var(--text-muted);
+  --color-danger: var(--danger);
+}
+
+/* Dark mode (default) */
+:root {
+  --background:   #1C1410;
+  --surface:      #2A1F14;
+  --border:       #3D2E1E;
+  --text-primary: #F5ECD7;
+  --text-muted:   #A89070;
+  --accent:       #C8922A;
+  --accent-hover: #D4A43A;
+  --danger:       #C0392B;
+}
+
+/* Light mode */
+:root.light {
+  --background:   #FAF6F0;
+  --surface:      #FFFFFF;
+  --border:       #E8DDD0;
+  --text-primary: #1C1410;
+  --text-muted:   #7A6550;
+  --accent:       #A67520;
+  --accent-hover: #8A6018;
+  --danger:       #C0392B;
+}
+
+/* Global Base Styles */
+@layer base {
+  body {
+    @apply bg-background text-text-primary font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+/* MDEditor overrides */
+.w-md-editor {
+  background-color: var(--surface) !important;
+  color: var(--text-primary) !important;
+  border: none !important;
+}
+
+.w-md-editor-text-input,
+.w-md-editor-text textarea {
+  color: var(--text-primary) !important;
+  caret-color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+}
+
+.w-md-editor-toolbar {
+  background-color: var(--surface) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.w-md-editor-toolbar li button {
+  color: var(--text-muted) !important;
+}
+
+.w-md-editor-toolbar li button:hover {
+  color: var(--text-primary) !important;
+}
+
+/* Markdown preview overflow fix */
+.wmde-markdown {
+  background-color: transparent !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-dm-sans), sans-serif !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+.wmde-markdown blockquote {
+  background-color: var(--background) !important;
+  border-left: 3px solid var(--accent) !important;
+  color: var(--text-muted) !important;
+  overflow-wrap: break-word !important;
+}
+
+.wmde-markdown pre,
+.wmde-markdown code {
+  background-color: var(--background) !important;
+  color: var(--text-primary) !important;
+  overflow-x: auto !important;
+  max-width: 100% !important;
+  white-space: pre-wrap !important;
+}
