@@ -63,9 +63,20 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {trendingBooks.map((book) => (
-              <BookCard key={book.id} {...book} />
-            ))}
+            {trendingBooks.map(
+              (book: {
+                id: string;
+                title: string;
+                description: string | null;
+                coverUrl: string | null;
+                likeCount: number;
+                averageRating: number;
+                authors: { id: string; name: string }[];
+                categories: { id: string; name: string }[];
+              }) => (
+                <BookCard key={book.id} {...book} />
+              ),
+            )}
           </div>
         </section>
       )}
@@ -77,17 +88,26 @@ export default async function HomePage() {
             <h2 className="text-2xl font-bold text-text-primary">From the Community</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {recentReviews.map((review) => (
-              <ReviewSnippetCard
-                key={review.id}
-                userName={review.user.name || "Anonymous"}
-                content={review.content}
-                rating={review.rating}
-                reviewLikes={review.reviewLikes}
-                bookId={review.book.id}
-                bookTitle={review.book.title}
-              />
-            ))}
+            {recentReviews.map(
+              (review: {
+                id: string;
+                content: string;
+                rating: number;
+                reviewLikes: number;
+                user: { name: string | null; avatarUrl: string | null };
+                book: { id: string; title: string };
+              }) => (
+                <ReviewSnippetCard
+                  key={review.id}
+                  userName={review.user.name || "Anonymous"}
+                  content={review.content}
+                  rating={review.rating}
+                  reviewLikes={review.reviewLikes}
+                  bookId={review.book.id}
+                  bookTitle={review.book.title}
+                />
+              ),
+            )}
           </div>
         </section>
       )}
@@ -106,9 +126,20 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {newestBooks.map((book) => (
-              <BookCard key={book.id} {...book} />
-            ))}
+            {newestBooks.map(
+              (book: {
+                id: string;
+                title: string;
+                description: string | null;
+                coverUrl: string | null;
+                likeCount: number;
+                averageRating: number;
+                authors: { id: string; name: string }[];
+                categories: { id: string; name: string }[];
+              }) => (
+                <BookCard key={book.id} {...book} />
+              ),
+            )}
           </div>
         </section>
       )}

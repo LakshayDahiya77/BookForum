@@ -13,28 +13,36 @@ export default async function CategoriesPage() {
 
         {/* The Responsive Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {categories.map((category) => (
-            <Link
-              key={category.id}
-              href={`/categories/${category.id}`}
-              className=" rounded-md p-8 flex flex-col items-center text-center shadow-sm border border-border hover:shadow-md transition-shadow"
-            >
-              {/* Icon Wrapper */}
-              <div className="w-20 h-20 mb-4 flex items-center justify-center">
-                <img
-                  src={category.icon}
-                  alt={category.name}
-                  className="w-full h-full object-contain"
-                />
-              </div>
+          {categories.map(
+            (category: {
+              id: string;
+              name: string;
+              description: string | null;
+              icon: string;
+              bookCount: number;
+            }) => (
+              <Link
+                key={category.id}
+                href={`/categories/${category.id}`}
+                className=" rounded-md p-8 flex flex-col items-center text-center shadow-sm border border-border hover:shadow-md transition-shadow"
+              >
+                {/* Icon Wrapper */}
+                <div className="w-20 h-20 mb-4 flex items-center justify-center">
+                  <img
+                    src={category.icon}
+                    alt={category.name}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
 
-              {/* Text Content */}
-              <h2 className="text-lg font-bold text-text-primary leading-tight mb-1">
-                {category.name}
-              </h2>
-              <p className="text-[0.8rem] text-text-muted line-clamp-2">{category.description}</p>
-            </Link>
-          ))}
+                {/* Text Content */}
+                <h2 className="text-lg font-bold text-text-primary leading-tight mb-1">
+                  {category.name}
+                </h2>
+                <p className="text-[0.8rem] text-text-muted line-clamp-2">{category.description}</p>
+              </Link>
+            ),
+          )}
         </div>
       </div>
     </div>

@@ -84,9 +84,17 @@ export default async function AdminCategoriesPage() {
           </h1>
           {categories.length > 0 ? (
             <ul className="flex flex-col gap-3">
-              {categories.map((category) => (
-                <CategoryRow key={category.id} category={category} />
-              ))}
+              {categories.map(
+                (category: {
+                  id: string;
+                  name: string;
+                  description: string | null;
+                  icon: string;
+                  bookCount: number;
+                }) => (
+                  <CategoryRow key={category.id} category={category} />
+                ),
+              )}
             </ul>
           ) : (
             <p className="text-text-muted text-center py-4 italic">No categories created yet.</p>

@@ -114,7 +114,7 @@ export default async function BookDetailPage({
           <p className="italic text-text-muted">
             by{" "}
             {book.authors?.length
-              ? book.authors.map((author, i) => (
+              ? book.authors.map((author: { id: string; name: string }, i: number) => (
                   <span key={author.id ?? i}>
                     <Link
                       href={`/authors/${author.id}`}
@@ -173,7 +173,7 @@ export default async function BookDetailPage({
           {/* Categories */}
           {book.categories.length > 0 && (
             <div className="flex gap-2 flex-wrap">
-              {book.categories.map((cat) => (
+              {book.categories.map((cat: { id: string; name: string }) => (
                 <Link
                   key={cat.id}
                   href={`/categories/${cat.id}`}
@@ -247,19 +247,30 @@ export default async function BookDetailPage({
 
         {book.reviews.length > 0 ? (
           <div className="flex flex-col gap-4">
-            {book.reviews.map((review) => (
-              <ReviewCard
-                key={review.id}
-                id={review.id}
-                bookId={review.bookId}
-                isOwner={dbUser?.id === review.userId}
-                user={review.user}
-                rating={review.rating}
-                content={review.content}
-                reviewLikes={review.reviewLikes}
-                createdAt={review.createdAt}
-              />
-            ))}
+            {book.reviews.map(
+              (review: {
+                id: string;
+                bookId: string;
+                userId: string;
+                content: string;
+                rating: number;
+                reviewLikes: number;
+                createdAt: Date;
+                user: { name: string | null; avatarUrl: string | null };
+              }) => (
+                <ReviewCard
+                  key={review.id}
+                  id={review.id}
+                  bookId={review.bookId}
+                  isOwner={dbUser?.id === review.userId}
+                  user={review.user}
+                  rating={review.rating}
+                  content={review.content}
+                  reviewLikes={review.reviewLikes}
+                  createdAt={review.createdAt}
+                />
+              ),
+            )}
           </div>
         ) : (
           <p className="text-sm text-text-muted bg-surface p-6 rounded-md text-center border border-dashed border-border">

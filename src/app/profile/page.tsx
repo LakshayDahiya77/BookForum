@@ -97,9 +97,58 @@ export default async function ProfilePage({
     tab === "liked"
       ? likedSort === "top-rated"
         ? votes
-            .map((vote) => vote.book)
-            .sort((a, b) => (b.averageRating ?? 0) - (a.averageRating ?? 0))
-        : votes.map((vote) => vote.book)
+            .map(
+              (vote: {
+                book: {
+                  id: string;
+                  title: string;
+                  description: string | null;
+                  coverUrl: string | null;
+                  likeCount: number;
+                  averageRating: number;
+                  authors: { id: string; name: string }[];
+                  categories: { id: string; name: string }[];
+                };
+              }) => vote.book,
+            )
+            .sort(
+              (
+                a: {
+                  id: string;
+                  title: string;
+                  description: string | null;
+                  coverUrl: string | null;
+                  likeCount: number;
+                  averageRating: number;
+                  authors: { id: string; name: string }[];
+                  categories: { id: string; name: string }[];
+                },
+                b: {
+                  id: string;
+                  title: string;
+                  description: string | null;
+                  coverUrl: string | null;
+                  likeCount: number;
+                  averageRating: number;
+                  authors: { id: string; name: string }[];
+                  categories: { id: string; name: string }[];
+                },
+              ) => (b.averageRating ?? 0) - (a.averageRating ?? 0),
+            )
+        : votes.map(
+            (vote: {
+              book: {
+                id: string;
+                title: string;
+                description: string | null;
+                coverUrl: string | null;
+                likeCount: number;
+                averageRating: number;
+                authors: { id: string; name: string }[];
+                categories: { id: string; name: string }[];
+              };
+            }) => vote.book,
+          )
       : [];
 
   const tabQuery = new URLSearchParams();
@@ -189,17 +238,25 @@ export default async function ProfilePage({
 
             {reviews.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {reviews.map((review) => (
-                  <ReviewSnippetCard
-                    key={review.id}
-                    userName={user.name || "Anonymous"}
-                    content={review.content}
-                    rating={review.rating}
-                    reviewLikes={review.reviewLikes}
-                    bookId={review.book.id}
-                    bookTitle={review.book.title}
-                  />
-                ))}
+                {reviews.map(
+                  (review: {
+                    id: string;
+                    content: string;
+                    rating: number;
+                    reviewLikes: number;
+                    book: { id: string; title: string };
+                  }) => (
+                    <ReviewSnippetCard
+                      key={review.id}
+                      userName={user.name || "Anonymous"}
+                      content={review.content}
+                      rating={review.rating}
+                      reviewLikes={review.reviewLikes}
+                      bookId={review.book.id}
+                      bookTitle={review.book.title}
+                    />
+                  ),
+                )}
               </div>
             ) : (
               <div>

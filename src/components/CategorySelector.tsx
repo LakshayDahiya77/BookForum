@@ -1,6 +1,12 @@
 "use client";
 
-import type { Category } from "@prisma/client";
+type Category = {
+  id: string;
+  name: string;
+  description: string | null;
+  icon: string;
+  bookCount: number;
+};
 
 interface CategorySelectorProps {
   categories: Category[];

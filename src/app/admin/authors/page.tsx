@@ -5,6 +5,13 @@ import { addAuthor, deleteAuthor, updateAuthor } from "./actions";
 import { Button } from "@/components/buttons/simpleButton";
 import { Edit2, Trash2 } from "lucide-react";
 
+type AuthorRow = {
+  id: string;
+  name: string;
+  bio: string | null;
+  photoUrl: string | null;
+};
+
 export default async function AdminAuthorsPage() {
   await requireAdmin();
 
@@ -69,7 +76,7 @@ export default async function AdminAuthorsPage() {
             <p className="text-text-muted">No authors created yet.</p>
           ) : (
             <ul className="space-y-4">
-              {authors.map((author) => (
+              {authors.map((author: AuthorRow) => (
                 <li key={author.id} className="border border-border rounded-lg p-4 bg-background">
                   <Form action={updateAuthor} className="flex flex-col gap-3">
                     <input type="hidden" name="id" value={author.id} />

@@ -4,8 +4,15 @@ import { useState, useTransition } from "react";
 import { Button } from "@/components/buttons/simpleButton";
 import { updateCategory, deleteCategory } from "@/app/admin/categories/actions";
 import { UPLOAD_LIMITS, formatFileSize } from "@/lib/uploadConfig";
-import type { Category } from "@prisma/client";
 import { ArrowRight, Edit2, Trash2 } from "lucide-react";
+
+type Category = {
+  id: string;
+  name: string;
+  description: string | null;
+  icon: string;
+  bookCount: number;
+};
 
 export function CategoryRow({ category }: { category: Category }) {
   const [isOpen, setIsOpen] = useState(false);

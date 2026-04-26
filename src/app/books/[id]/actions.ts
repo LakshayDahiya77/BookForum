@@ -3,9 +3,12 @@ import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { updateBookAverageRating } from "@/lib/ratings";
-import { Prisma } from "@prisma/client";
 import { generateBookSummary } from "@/lib/ai/summarize";
 import { APP_CONFIG } from "@/config/app";
+
+function hasErrorCode(error: unknown): error is { code: string } {
+  return typeof error === "object" && error !== null && "code" in error;
+}
 
 export async function ToggleLike(formData: FormData) {
   try {
@@ -119,10 +122,8 @@ export async function AddReview(formData: FormData) {
 
     revalidatePath(`/books/${bookId}`);
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        throw new Error("You have already reviewed this book. You cannot submit another.");
-      }
+    if (hasErrorCode(error) && error.code === "P2002") {
+      throw new Error("You have already reviewed this book. You cannot submit another.");
     }
     console.error(error);
     throw new Error("Failed to publish review.");

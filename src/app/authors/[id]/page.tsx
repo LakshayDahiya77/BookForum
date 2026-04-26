@@ -56,9 +56,20 @@ export default async function AuthorProfilePage({ params }: { params: Promise<{ 
 
         {author.books.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {author.books.map((book) => (
-              <BookCard key={book.id} {...book} />
-            ))}
+            {author.books.map(
+              (book: {
+                id: string;
+                title: string;
+                description: string | null;
+                coverUrl: string | null;
+                likeCount: number;
+                averageRating: number;
+                authors: { id: string; name: string }[];
+                categories: { id: string; name: string }[];
+              }) => (
+                <BookCard key={book.id} {...book} />
+              ),
+            )}
           </div>
         ) : (
           <p className="text-text-muted bg-surface border border-border rounded-md px-4 py-3">
