@@ -4,5 +4,6 @@ export const APP_CONFIG = {
   },
   pagination: {
     booksPerPage: 12,
+    reviewsPerPage: 10,
   },
 };

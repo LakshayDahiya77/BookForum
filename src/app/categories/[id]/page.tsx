@@ -2,10 +2,12 @@ import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
 import BookGrid from "@/components/BookGrid";
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import Image from "next/image";
 import SortSelect from "@/components/SortSelect";
+import Pagination from "@/components/Pagination";
+import { APP_CONFIG } from "@/config/app";
 
-const BOOKS_PER_PAGE = 12;
+const BOOKS_PER_PAGE = APP_CONFIG.pagination.booksPerPage;
 
 const categorySortOptions = [
   { label: "Latest Added", value: "latest-added" },
@@ -109,7 +111,13 @@ export default async function CategoryPage({
         {/* Dynamic Header based on the Category */}
         <div className="flex items-center gap-4 mb-8">
           {category.icon && (
-            <img src={category.icon} alt={category.name} className="w-16 h-16 object-contain" />
+            <Image
+              src={category.icon}
+              alt={category.name}
+              width={64}
+              height={64}
+              className="object-contain"
+            />
           )}
           <div>
             <h1 className="text-4xl font-bold text-text-primary mb-1">{category.name}</h1>
@@ -124,37 +132,12 @@ export default async function CategoryPage({
 
         <BookGrid books={books} />
 
-        <div className="mt-8 flex items-center justify-between border-t border-border pt-4">
-          {hasPrevPage ? (
-            <Link
-              href={`/categories/${category.id}?${new URLSearchParams({ ...Object.fromEntries(queryBase), page: String(page - 1) }).toString()}`}
-              className="px-3 py-1.5 text-sm border border-border rounded-md text-text-primary hover:border-accent hover:text-accent transition-colors"
-            >
-              Previous
-            </Link>
-          ) : (
-            <span className="px-3 py-1.5 text-sm border border-border rounded-md text-text-muted opacity-60">
-              Previous
-            </span>
-          )}
-
-          <span className="text-sm text-text-muted">
-            Page {Math.min(page, totalPages)} of {totalPages}
-          </span>
-
-          {hasNextPage ? (
-            <Link
-              href={`/categories/${category.id}?${new URLSearchParams({ ...Object.fromEntries(queryBase), page: String(page + 1) }).toString()}`}
-              className="px-3 py-1.5 text-sm border border-border rounded-md text-text-primary hover:border-accent hover:text-accent transition-colors"
-            >
-              Next
-            </Link>
-          ) : (
-            <span className="px-3 py-1.5 text-sm border border-border rounded-md text-text-muted opacity-60">
-              Next
-            </span>
-          )}
-        </div>
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          baseUrl={`/categories/${category.id}`}
+          queryParams={queryBase.toString()}
+        />
       </div>
     </div>
   );

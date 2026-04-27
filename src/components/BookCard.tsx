@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Star, ThumbsUp } from "lucide-react";
 
 type BookCardProps = {
@@ -28,9 +29,15 @@ export default function BookCard({
         {/* Top part: Cover and Details */}
         <div className="flex gap-4 flex-1 min-h-0">
           {/* Cover */}
-          <div className="shrink-0 w-32 h-48 bg-border rounded-sm overflow-hidden flex items-center justify-center shadow-sm">
+          <div className="relative shrink-0 w-32 h-48 bg-border rounded-sm overflow-hidden flex items-center justify-center shadow-sm">
             {coverUrl ? (
-              <img src={coverUrl} alt={title} className="w-full h-full object-cover" />
+              <Image
+                src={coverUrl}
+                alt={title}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover"
+              />
             ) : (
               <span className="text-text-muted text-xs text-center px-2">No cover</span>
             )}

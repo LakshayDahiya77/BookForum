@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
-import MDEditor from "@uiw/react-md-editor";
+import dynamic from "next/dynamic";
+
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 type MarkdownEditorProps = {
   name: string;
