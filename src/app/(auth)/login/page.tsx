@@ -83,12 +83,12 @@ export default function AuthPage() {
           </div>
 
           <div className="flex flex-col md:flex-row md:min-h-140 ">
-            <div className="hidden md:flex flex-1 items-center justify-center p-8 lg:p-12 relative w-full h-full min-h-[300px]">
+            <div className="hidden md:flex flex-1 items-center justify-center p-8 lg:p-12 relative w-full h-full min-h-[500px]">
               <Image
                 src="/sign-up-element-chair.png"
                 alt="Reading Chair"
                 fill
-                sizes="50vw"
+                sizes="150vw"
                 className="object-contain opacity-100"
               />
             </div>

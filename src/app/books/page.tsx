@@ -3,7 +3,7 @@ import { requireUser } from "@/lib/auth";
 import BookGrid from "@/components/BookGrid";
 import SearchBar from "@/components/SearchBar";
 import SortSelect from "@/components/SortSelect";
-import Pagination from "@/components/Pagination";
+import PaginationControl from "@/components/PaginationControl";
 import { APP_CONFIG } from "@/config/app";
 
 const BOOKS_PER_PAGE = APP_CONFIG.pagination.booksPerPage;
@@ -116,14 +116,7 @@ export default async function BooksGridPage({
           <BookGrid books={books} />
         )}
 
-        {totalBooks > BOOKS_PER_PAGE && (
-          <Pagination
-            currentPage={page}
-            totalPages={totalPages}
-            baseUrl="/books"
-            queryParams={queryBase.toString()}
-          />
-        )}
+        {totalBooks > BOOKS_PER_PAGE && <PaginationControl totalPages={totalPages} />}
       </div>
     </div>
   );

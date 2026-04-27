@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
 import ConditionalHeader from "@/components/ConditionalHeader";
-import { Playfair_Display, DM_Sans, Montserrat } from "next/font/google";
+import { Playfair_Display, DM_Sans, Montserrat, Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const fontHeading = Montserrat({
   variable: "--font-heading",
@@ -27,7 +30,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fontHeading.variable} ${fontBody.variable} h-full antialiased`}
+      className={cn("h-full", "antialiased", fontHeading.variable, fontBody.variable, "font-sans", geist.variable)}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">

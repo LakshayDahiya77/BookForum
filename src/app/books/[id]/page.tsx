@@ -10,7 +10,7 @@ import ReviewCard, { AISummaryCard } from "@/components/ReviewCard";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import SortSelect from "@/components/SortSelect";
 import EditBookModal from "@/components/EditBookModal";
-import Pagination from "@/components/Pagination";
+import PaginationControl from "@/components/PaginationControl";
 import { APP_CONFIG } from "@/config/app";
 
 const REVIEWS_PER_PAGE = APP_CONFIG.pagination.reviewsPerPage;
@@ -226,7 +226,7 @@ export default async function BookDetailPage({
               name="rating"
               required
               defaultValue=""
-              className="bg-background border border-border text-text-primary rounded-md px-2 py-1 text-sm outline-none focus:border-accent font-sans"
+              className="bg-background border border-border text-text-primary rounded-md px-2 py-1 text-sm outline-none focus:border-accent"
             >
               <option value="" disabled>
                 Select a rating...
@@ -287,12 +287,7 @@ export default async function BookDetailPage({
           </p>
         )}
 
-        <Pagination
-          currentPage={page}
-          totalPages={totalReviewPages}
-          baseUrl={`/books/${book.id}`}
-          queryParams={pageQuery.toString()}
-        />
+        <PaginationControl totalPages={totalReviewPages} />
       </div>
     </main>
   );
