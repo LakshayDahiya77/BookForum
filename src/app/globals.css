@@ -18,6 +18,11 @@
   --color-text-primary: var(--text-primary);
   --color-text-muted: var(--text-muted);
   --color-danger: var(--danger);
+
+  /* Glassmorphism */
+  --color-glass: var(--glass-bg);
+  --blur-glass-bg: var(--glass-blur-bg);
+  --blur-glass-form: var(--glass-blur-form);
 }
 
 /* Dark mode (default) */
@@ -30,6 +35,9 @@
   --accent:       #C8922A;
   --accent-hover: #D4A43A;
   --danger:       #C0392B;
+  --glass-bg:     rgba(42, 31, 20, 0.7);
+  --glass-blur-bg: 5px;
+  --glass-blur-form: 10px;
 }
 
 /* Light mode */
@@ -42,6 +50,9 @@
   --accent:       #A67520;
   --accent-hover: #8A6018;
   --danger:       #C0392B;
+  --glass-bg:     rgba(255, 255, 255, 0.5);
+  --glass-blur-bg: 5px;
+  --glass-blur-form: 10px;
 }
 
 /* Global Base Styles */

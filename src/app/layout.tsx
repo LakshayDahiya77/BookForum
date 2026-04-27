@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
+import ConditionalHeader from "@/components/ConditionalHeader";
 import { Playfair_Display, DM_Sans, Montserrat } from "next/font/google";
 
 const fontHeading = Montserrat({
@@ -30,7 +31,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <Header />
+        <ConditionalHeader>
+          <Header />
+        </ConditionalHeader>
         {children}
       </body>
     </html>

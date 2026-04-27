@@ -4,11 +4,13 @@ import Form from "next/form";
 import { prisma } from "@/lib/prisma";
 import { addBookAction } from "@/app/admin/books/actions";
 import { addCategory } from "@/app/admin/categories/actions";
+import { addAuthor } from "@/app/admin/authors/actions";
 import { Button } from "@/components/buttons/simpleButton";
 import { CategorySelector } from "@/components/CategorySelector";
 import { CategoryRow } from "@/components/CategoryRow";
 import { UPLOAD_LIMITS, formatFileSize } from "@/lib/uploadConfig";
 import { BookOpen, Bookmark, Edit2 } from "lucide-react";
+import AuthorManager from "@/components/admin/AuthorManager";
 
 function tabHref(tab: string) {
   return `/admin?tab=${tab}`;
@@ -26,6 +28,10 @@ export default async function AdminPage({
   const tab = rawTab === "categories" || rawTab === "authors" ? rawTab : "books";
 
   const categories = await prisma.category.findMany({
+    orderBy: { name: "asc" },
+  });
+
+  const authors = await prisma.author.findMany({
     orderBy: { name: "asc" },
   });
 
@@ -249,11 +255,62 @@ export default async function AdminPage({
       )}
 
       {tab === "authors" && (
-        <div className="bg-surface p-8 rounded-xl shadow-sm border border-border w-full max-w-xl">
-          <h2 className="text-2xl font-bold text-text-primary mb-4">Authors</h2>
-          <p className="text-text-muted">
-            No author management form is implemented yet in the existing dedicated authors page.
-          </p>
+        <div className="flex flex-col items-center justify-start gap-8">
+          <div className="bg-surface p-8 rounded-xl shadow-sm border border-border w-full max-w-xl">
+            <h2 className="text-2xl font-bold text-text-primary mb-6 border-b border-border pb-4">
+              Add New Author
+            </h2>
+
+            <Form action={addAuthor} className="flex flex-col gap-5">
+              <div>
+                <label className="block text-sm font-bold text-text-primary mb-2">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="e.g. Isaac Asimov"
+                  className="bg-background border border-border p-3 w-full rounded-md text-text-primary placeholder:text-text-muted focus:ring-1 focus:ring-accent focus:border-accent outline-none transition-all"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-text-primary mb-2">Bio</label>
+                <textarea
+                  name="bio"
+                  rows={4}
+                  placeholder="Short biography..."
+                  className="bg-background border border-border p-3 w-full rounded-md text-text-primary placeholder:text-text-muted focus:ring-1 focus:ring-accent focus:border-accent outline-none transition-all resize-y"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-text-primary mb-2">
+                  Photo{" "}
+                  <span className="font-normal text-text-muted">
+                    (Max {formatFileSize(UPLOAD_LIMITS.AUTHOR_PHOTO.maxSize)})
+                  </span>
+                </label>
+                <input
+                  type="file"
+                  name="photoFile"
+                  accept="image/*"
+                  className="bg-background border border-border p-2 w-full rounded-md text-text-muted text-sm file:mr-4 file:py-1.5 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-bold file:uppercase file:bg-accent file:text-background hover:file:bg-accent-hover cursor-pointer transition-all"
+                />
+              </div>
+
+              <div className="flex justify-end mt-2 pt-4 border-t border-border">
+                <Button
+                  type="submit"
+                  variant="primary"
+                  className="font-bold uppercase tracking-widest text-xs"
+                >
+                  Add Author
+                </Button>
+              </div>
+            </Form>
+          </div>
+
+          <AuthorManager initialAuthors={authors} />
         </div>
       )}
     </main>

@@ -25,6 +25,10 @@ export default function MarkdownEditor({ name, placeholder }: MarkdownEditorProp
           textareaProps={{
             placeholder: placeholder ?? "Write your review...",
             required: true,
+            autoCapitalize: "off",
+            autoComplete: "off",
+            autoCorrect: "off",
+            spellCheck: false,
           }}
           height={240}
         />

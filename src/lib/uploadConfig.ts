@@ -11,6 +11,10 @@ export const UPLOAD_LIMITS = {
     maxSize: 10 * 1024 * 1024, // 10MB
     bucket: "book-covers",
   },
+  AUTHOR_PHOTO: {
+    maxSize: 5 * 1024 * 1024, // 5MB
+    bucket: "author-photos",
+  },
 };
 
 export function formatFileSize(bytes: number): string {

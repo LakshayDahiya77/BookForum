@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { loginAction, signupAction } from "./actions";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -31,9 +32,26 @@ export default function AuthPage() {
     "w-full p-3 bg-background border border-border rounded-md focus:ring-2 focus:ring-accent/30 focus:border-accent focus:outline-none text-sm text-text-primary placeholder:text-text-muted font-medium transition-colors";
 
   return (
-    <div className="min-h-screen bg-background flex flex-col justify-center items-center p-4 py-12">
-      <div className="z-10 w-full max-w-4xl relative">
-        <div className="bg-surface border border-border rounded-2xl overflow-hidden relative z-20">
+    <div
+      className="min-h-screen flex flex-col justify-center items-center p-4 py-12 relative overflow-hidden"
+      style={{
+        backgroundImage: "url('/sign-up-background.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+      }}
+    >
+      <div className="absolute inset-0 backdrop-blur-glass-bg" />
+      <div className="z-10 w-full max-w-6xl relative backdrop-blur-glass-form">
+        <img
+          src="/site-logo-transparent.png"
+          alt="Site Logo"
+          className="h-16 object-contain mb-8 mx-auto"
+        />
+        <div className="border border-border rounded-2xl overflow-hidden relative z-20 bg-glass shadow-2xl">
+          <div className="absolute bottom-4 right-4 z-30">
+            <ThemeToggle />
+          </div>
           <div className="grid grid-cols-2 w-full relative border-b border-border">
             <button
               onClick={() => {
@@ -65,14 +83,16 @@ export default function AuthPage() {
             </button>
           </div>
 
-          <div className="flex flex-col md:flex-row md:min-h-140">
-            <div className="flex-1 p-8 md:p-12 flex flex-col justify-center relative min-h-125">
+          <div className="flex flex-col md:flex-row md:min-h-140 ">
+            <div className="hidden md:flex flex-1 items-center justify-center p-4 lg:p-6 ">
               <img
-                src="/site-logo-transparent.png"
-                alt="Site Logo"
-                className="h-16 object-contain mx-auto mb-10"
+                src="/sign-up-element-chair.png"
+                alt="Reading Chair"
+                className="w-full max-w-105 object-contain opacity-90"
               />
+            </div>
 
+            <div className="flex-1 p-8 md:p-12 flex flex-col justify-center relative min-h-125">
               {error && (
                 <div className="mb-4 p-3 bg-surface text-danger text-sm rounded-md border border-danger/40">
                   {error}
@@ -177,14 +197,6 @@ export default function AuthPage() {
                   </div>
                 </form>
               )}
-            </div>
-
-            <div className="hidden md:flex flex-1 items-center justify-center p-4 lg:p-6 border-l border-border bg-background">
-              <img
-                src="/sign-up-element-chair.png"
-                alt="Reading Chair"
-                className="w-full max-w-105 object-contain"
-              />
             </div>
           </div>
         </div>
