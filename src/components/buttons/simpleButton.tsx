@@ -41,7 +41,7 @@ const variantClasses: Record<ButtonVariant, string> = {
 const sizeClasses: Record<ButtonSize, string> = {
   sm: "px-3 py-1.5 text-sm font-medium",
   md: "px-4 py-2 text-base font-medium",
-  lg: "px-6 py-3 text-lg font-medium",
+  lg: "px-4 py-2 text-base font-medium",
 };
 
 /**
@@ -79,7 +79,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled || isLoading}
         className={cn(
           // Base styles
-          "inline-flex items-center justify-center rounded-md font-medium transition-colors",
+          "inline-flex items-center justify-center rounded-md font-medium transition-colors cursor-pointer",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
           "disabled:opacity-50 disabled:cursor-not-allowed",
           // Variant styles

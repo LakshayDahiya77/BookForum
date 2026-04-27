@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/auth";
+import { isUserAdmin, requireUser } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,6 +9,7 @@ import { AddReview, ToggleLike } from "./actions";
 import ReviewCard, { AISummaryCard } from "@/components/ReviewCard";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import SortSelect from "@/components/SortSelect";
+import EditBookModal from "@/components/EditBookModal";
 
 const REVIEWS_PER_PAGE = 10;
 
@@ -50,6 +51,7 @@ export default async function BookDetailPage({
 }) {
   const authUser = await requireUser();
   const dbUser = await prisma.user.findUnique({ where: { id: authUser.id } });
+  const isAdmin = await isUserAdmin();
   const resolvedSearchParams = await searchParams;
   const page = parsePositiveInt(resolvedSearchParams.page, 1);
   const rawSort = typeof resolvedSearchParams.sort === "string" ? resolvedSearchParams.sort : "";
@@ -85,6 +87,8 @@ export default async function BookDetailPage({
   const hasPrevPage = page > 1;
   const hasNextPage = page < totalReviewPages;
 
+  const allCategories = isAdmin ? await prisma.category.findMany({ orderBy: { name: "asc" } }) : [];
+
   const pageQuery = new URLSearchParams();
   pageQuery.set("sort", sort);
 
@@ -95,9 +99,9 @@ export default async function BookDetailPage({
   }
 
   return (
-    <main className="w-full flex-1 max-w-7xl mx-auto py-10 px-4 sm:px-6">
+    <main className="w-full flex-1 max-w-7xl mx-auto py-10 px-4 sm:px-6 relative">
       {/* Hero section */}
-      <div className="flex gap-8 pb-8 border-b border-border">
+      <div className="flex gap-8 pb-8 border-b border-border relative">
         {book.coverUrl && (
           <Image
             src={book.coverUrl}
@@ -192,6 +196,7 @@ export default async function BookDetailPage({
             </div>
           )}
         </div>
+        {isAdmin && <EditBookModal book={book} allCategories={allCategories} />}
       </div>
 
       {/* Write a review */}

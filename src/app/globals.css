@@ -18,30 +18,39 @@
   --color-text-primary: var(--text-primary);
   --color-text-muted: var(--text-muted);
   --color-danger: var(--danger);
-}
 
-/* Dark mode (default) */
+  /* Glassmorphism */
+  --color-glass: var(--glass-bg);
+  --blur-glass-bg: var(--glass-blur-bg);
+  --blur-glass-form: var(--glass-blur-form);
+}
 :root {
-  --background:   #1C1410;
-  --surface:      #2A1F14;
-  --border:       #3D2E1E;
-  --text-primary: #F5ECD7;
-  --text-muted:   #A89070;
+  --background:   #0F1117;
+  --surface:      #1A1D27;
+  --border:       #2E3347;
+  --text-primary: #E8EAF0;
+  --text-muted:   #8B92A8;
   --accent:       #C8922A;
-  --accent-hover: #D4A43A;
+  --accent-hover: #ffd987;
   --danger:       #C0392B;
+  --glass-bg:     rgba(12, 41, 39, 0.3);
+  --glass-blur-bg: 4px;
+  --glass-blur-form: 8px;
 }
 
 /* Light mode */
 :root.light {
-  --background:   #FAF6F0;
+  --background:   #F6F6FE;
   --surface:      #FFFFFF;
-  --border:       #E8DDD0;
-  --text-primary: #1C1410;
-  --text-muted:   #7A6550;
+  --border:       #D8DBE8;
+  --text-primary: #0F1117;
+  --text-muted:   #5A6080;
   --accent:       #A67520;
   --accent-hover: #8A6018;
   --danger:       #C0392B;
+  --glass-bg:     rgba(200, 205, 220, 0.4);
+  --glass-blur-bg: 4px;
+  --glass-blur-form: 8px;
 }
 
 /* Global Base Styles */
@@ -52,6 +61,10 @@
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif;
+  }
+
+  button {
+    @apply cursor-pointer;
   }
 }
 

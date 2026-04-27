@@ -6,7 +6,16 @@ type Theme = "dark" | "light";
 
 function readTheme(): Theme {
   const stored = localStorage.getItem("theme");
-  return stored === "light" ? "light" : "dark";
+  if (stored === "light" || stored === "dark") return stored;
+
+  // Detect system preference on first visit
+  if (typeof window !== "undefined") {
+    const systemPreference = window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+    return systemPreference;
+  }
+  return "dark";
 }
 
 function subscribe(onStoreChange: () => void) {

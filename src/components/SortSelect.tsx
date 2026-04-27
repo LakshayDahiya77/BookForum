@@ -27,7 +27,7 @@ export default function SortSelect({ name = "sort", value, options }: SortSelect
         next.set("page", "1");
         router.push(`${pathname}?${next.toString()}`);
       }}
-      className="bg-surface border border-border rounded-md px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent"
+      className="bg-surface border border-border rounded-md px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent font-sans"
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>
