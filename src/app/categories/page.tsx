@@ -24,10 +24,10 @@ export default async function CategoriesPage() {
               <Link
                 key={category.id}
                 href={`/categories/${category.id}`}
-                className=" rounded-md p-8 flex flex-col items-center text-center shadow-sm border border-border hover:shadow-md transition-shadow"
+                className=" rounded-md p-8 flex flex-col items-center text-center shadow-sm border border-border hover:border-accent transition-colors cursor-pointer bg-surface"
               >
                 {/* Icon Wrapper */}
-                <div className="w-20 h-20 mb-4 flex items-center justify-center">
+                <div className="w-20 h-20 mb-4 flex items-center justify-center ">
                   <img
                     src={category.icon}
                     alt={category.name}
