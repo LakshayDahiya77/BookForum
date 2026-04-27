@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { DeleteReview, ToggleReviewLike } from "@/app/books/[id]/actions";
 import ReviewLikeButton from "@/components/ReviewLikeButton";
 import MarkdownPreview from "@/components/MarkdownPreview";
@@ -44,12 +45,14 @@ export default function ReviewCard({
 
       <div className="flex gap-4">
         {/* Avatar */}
-        <div className="w-10 h-10 bg-background rounded-full shrink-0 overflow-hidden border border-border">
+        <div className="relative w-10 h-10 bg-background rounded-full shrink-0 overflow-hidden border border-border">
           {user.avatarUrl ? (
-            <img
+            <Image
               src={user.avatarUrl}
               alt={user.name || "User"}
-              className="w-full h-full object-cover"
+              fill
+              sizes="40px"
+              className="object-cover"
             />
           ) : (
             <div className="flex items-center justify-center h-full w-full text-text-muted font-bold text-sm">

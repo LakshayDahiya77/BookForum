@@ -67,9 +67,15 @@ export default async function Header() {
               href="/profile"
               className="flex items-center gap-2 hover:opacity-80 transition-opacity"
             >
-              <div className="w-8 h-8 rounded-full bg-border overflow-hidden shrink-0">
+              <div className="relative w-8 h-8 rounded-full bg-border overflow-hidden shrink-0">
                 {dbUser.avatarUrl ? (
-                  <img src={dbUser.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                  <Image
+                    src={dbUser.avatarUrl}
+                    alt="Avatar"
+                    fill
+                    sizes="32px"
+                    className="object-cover"
+                  />
                 ) : (
                   <div className="flex items-center justify-center h-full w-full text-xs font-bold text-text-muted">
                     {(dbUser.name || "U")[0].toUpperCase()}

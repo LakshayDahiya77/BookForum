@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { loginAction, signupAction } from "./actions";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Button } from "@/components/buttons/simpleButton";
@@ -82,20 +83,25 @@ export default function AuthPage() {
           </div>
 
           <div className="flex flex-col md:flex-row md:min-h-140 ">
-            <div className="hidden md:flex flex-1 items-center justify-center">
-              <img
+            <div className="hidden md:flex flex-1 items-center justify-center p-8 lg:p-12 relative w-full h-full min-h-[300px]">
+              <Image
                 src="/sign-up-element-chair.png"
                 alt="Reading Chair"
-                className="w-full max-w-105 object-contain opacity-100"
+                fill
+                sizes="50vw"
+                className="object-contain opacity-100"
               />
             </div>
 
-            <div className="flex-1 flex flex-col justify-center relative min-h-125">
-              <img
-                src="/site-logo-transparent.png"
-                alt="Site Logo"
-                className="h-20 object-contain mb-8 mx-auto"
-              />
+            <div className="flex-1 p-8 md:p-12 flex flex-col justify-center relative min-h-125">
+              <div className="h-20 mb-8 relative w-full">
+                <Image
+                  src="/site-logo-transparent.png"
+                  alt="Site Logo"
+                  fill
+                  className="object-contain mx-auto"
+                />
+              </div>
               {error && (
                 <div className="mb-4 p-3 bg-surface text-danger text-sm rounded-md border border-danger/40">
                   {error}

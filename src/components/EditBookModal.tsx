@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Form from "next/form";
-import { updateBookAction } from "@/app/admin/books/actions";
+import { updateBookAction, deleteBookAction } from "@/app/admin/books/actions";
 import { Button } from "@/components/buttons/simpleButton";
 import { Edit2, X } from "lucide-react";
 import { CategorySelector } from "@/components/CategorySelector";
@@ -105,14 +105,23 @@ export default function EditBookModal({ book, allCategories }: EditBookModalProp
 
             <div>
               <label className="block text-sm font-bold text-text-primary mb-2">
-                Cover Image (Optional)
+                Cover Image (File or URL)
               </label>
-              <input
-                type="file"
-                name="cover-file"
-                accept="image/*"
-                className="bg-background border border-border p-2 w-full rounded-md text-text-muted text-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-bold file:uppercase file:tracking-wider file:bg-accent file:text-background hover:file:bg-accent-hover cursor-pointer transition-all"
-              />
+              <div className="flex flex-col gap-2">
+                <input
+                  type="file"
+                  name="cover-file"
+                  accept="image/*"
+                  className="bg-background border border-border p-2 w-full rounded-md text-text-muted text-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-bold file:uppercase file:tracking-wider file:bg-accent file:text-background hover:file:bg-accent-hover cursor-pointer transition-all"
+                />
+                <div className="text-center text-xs text-text-muted font-bold uppercase">or</div>
+                <input
+                  type="url"
+                  name="cover-url"
+                  placeholder="https://example.com/image.jpg"
+                  className="bg-background border border-border p-3 w-full rounded-md text-text-primary placeholder:text-text-muted focus:ring-1 focus:ring-accent focus:border-accent outline-none transition-all"
+                />
+              </div>
             </div>
 
             <div>
@@ -135,23 +144,40 @@ export default function EditBookModal({ book, allCategories }: EditBookModalProp
               />
             </div>
 
-            <div className="flex justify-end mt-6 pt-6 border-t border-border gap-3">
+            <div className="flex justify-between mt-6 pt-6 border-t border-border">
               <Button
-                type="button"
-                variant="secondary"
-                onClick={() => setIsOpen(false)}
+                formAction={deleteBookAction}
+                type="submit"
+                variant="danger"
+                onClick={(e) => {
+                  if (!confirm("Are you sure you want to delete this book?")) {
+                    e.preventDefault();
+                  } else {
+                    setTimeout(() => setIsOpen(false), 50);
+                  }
+                }}
                 className="px-6 py-2 text-xs font-bold uppercase tracking-widest"
               >
-                Cancel
+                Delete
               </Button>
-              <Button
-                type="submit"
-                variant="primary"
-                onClick={() => setTimeout(() => setIsOpen(false), 50)} // Close soon after submit
-                className="px-8 py-2 text-xs font-bold uppercase tracking-widest"
-              >
-                Save Changes
-              </Button>
+              <div className="flex gap-3">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setIsOpen(false)}
+                  className="px-6 py-2 text-xs font-bold uppercase tracking-widest"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  onClick={() => setTimeout(() => setIsOpen(false), 50)} // Close soon after submit
+                  className="px-8 py-2 text-xs font-bold uppercase tracking-widest"
+                >
+                  Save Changes
+                </Button>
+              </div>
             </div>
           </Form>
         </div>

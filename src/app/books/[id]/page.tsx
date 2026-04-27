@@ -10,8 +10,10 @@ import ReviewCard, { AISummaryCard } from "@/components/ReviewCard";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import SortSelect from "@/components/SortSelect";
 import EditBookModal from "@/components/EditBookModal";
+import Pagination from "@/components/Pagination";
+import { APP_CONFIG } from "@/config/app";
 
-const REVIEWS_PER_PAGE = 10;
+const REVIEWS_PER_PAGE = APP_CONFIG.pagination.reviewsPerPage;
 
 const reviewSortOptions = [
   { label: "Newest", value: "newest" },
@@ -109,7 +111,7 @@ export default async function BookDetailPage({
             width={192}
             height={288}
             loading="eager"
-            className="rounded-md shadow-md object-cover shrink-0"
+            className="rounded-md shadow-md object-cover shrink-0 w-auto h-auto"
           />
         )}
 
@@ -201,12 +203,14 @@ export default async function BookDetailPage({
 
       {/* Write a review */}
       <div className="mt-8 bg-surface border border-border rounded-md p-4 flex gap-4">
-        <div className="w-10 h-10 bg-border rounded-full shrink-0 overflow-hidden flex items-center justify-center">
+        <div className="relative w-10 h-10 bg-border rounded-full shrink-0 overflow-hidden flex items-center justify-center">
           {dbUser?.avatarUrl ? (
-            <img
+            <Image
               src={dbUser.avatarUrl}
               alt={dbUser.name || "User"}
-              className="w-full h-full object-cover"
+              fill
+              sizes="40px"
+              className="object-cover"
             />
           ) : (
             <span className="text-text-muted text-sm font-bold">
@@ -222,7 +226,7 @@ export default async function BookDetailPage({
               name="rating"
               required
               defaultValue=""
-              className="bg-background border border-border text-text-primary rounded-md px-2 py-1 text-sm outline-none focus:border-accent"
+              className="bg-background border border-border text-text-primary rounded-md px-2 py-1 text-sm outline-none focus:border-accent font-sans"
             >
               <option value="" disabled>
                 Select a rating...
@@ -283,35 +287,12 @@ export default async function BookDetailPage({
           </p>
         )}
 
-        <div className="mt-6 flex items-center justify-between border-t border-border pt-4">
-          {hasPrevPage ? (
-            <Link
-              href={`/books/${book.id}?${new URLSearchParams({ ...Object.fromEntries(pageQuery), page: String(page - 1) }).toString()}`}
-              className="px-3 py-1.5 text-sm border border-border rounded-md text-text-primary hover:border-accent hover:text-accent transition-colors"
-            >
-              Previous
-            </Link>
-          ) : (
-            <span className="px-3 py-1.5 text-sm border border-border rounded-md text-text-muted opacity-60">
-              Previous
-            </span>
-          )}
-          <span className="text-sm text-text-muted">
-            Page {Math.min(page, totalReviewPages)} of {totalReviewPages}
-          </span>
-          {hasNextPage ? (
-            <Link
-              href={`/books/${book.id}?${new URLSearchParams({ ...Object.fromEntries(pageQuery), page: String(page + 1) }).toString()}`}
-              className="px-3 py-1.5 text-sm border border-border rounded-md text-text-primary hover:border-accent hover:text-accent transition-colors"
-            >
-              Next
-            </Link>
-          ) : (
-            <span className="px-3 py-1.5 text-sm border border-border rounded-md text-text-muted opacity-60">
-              Next
-            </span>
-          )}
-        </div>
+        <Pagination
+          currentPage={page}
+          totalPages={totalReviewPages}
+          baseUrl={`/books/${book.id}`}
+          queryParams={pageQuery.toString()}
+        />
       </div>
     </main>
   );

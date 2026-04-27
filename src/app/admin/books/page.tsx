@@ -63,22 +63,31 @@ export default async function addNewBook() {
             {/* Cover Image Upload */}
             <div>
               <label className="block text-sm font-bold text-text-primary mb-2">
-                Cover Image{" "}
+                Cover Image (File or URL){" "}
                 <span className="font-normal text-text-muted">
                   (Max {formatFileSize(UPLOAD_LIMITS.BOOK_COVER.maxSize)})
                 </span>
               </label>
-              <input
-                type="file"
-                name="cover-file"
-                id="add-book-cover"
-                accept="image/*"
-                className="bg-background border border-border p-2 w-full rounded-md text-text-muted text-sm
-                  file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 
-                  file:text-xs file:font-bold file:uppercase file:tracking-wider
-                  file:bg-accent file:text-background hover:file:bg-accent-hover 
-                  cursor-pointer transition-all"
-              />
+              <div className="flex flex-col gap-2">
+                <input
+                  type="file"
+                  name="cover-file"
+                  id="add-book-cover"
+                  accept="image/*"
+                  className="bg-background border border-border p-2 w-full rounded-md text-text-muted text-sm
+                    file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 
+                    file:text-xs file:font-bold file:uppercase file:tracking-wider
+                    file:bg-accent file:text-background hover:file:bg-accent-hover 
+                    cursor-pointer transition-all"
+                />
+                <div className="text-center text-xs text-text-muted font-bold uppercase">or</div>
+                <input
+                  type="url"
+                  name="cover-url"
+                  placeholder="https://example.com/image.jpg"
+                  className="bg-background border border-border p-3 w-full rounded-md text-text-primary placeholder:text-text-muted focus:ring-1 focus:ring-accent focus:border-accent outline-none transition-all"
+                />
+              </div>
             </div>
 
             {/* Publish Year */}
