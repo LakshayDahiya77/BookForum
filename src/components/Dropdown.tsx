@@ -36,8 +36,9 @@ export default function Dropdown({
   }, [isOpen]);
 
   const handleLinkClick = (e: React.MouseEvent) => {
-    // If a link, button, or explicit dropdown item was clicked inside the menu, close it
-    if ((e.target as HTMLElement).closest("a, button, [role='menuitem']")) {
+    // Close on navigation or explicit menu items, but keep form buttons alive so
+    // server actions can submit before the dropdown unmounts.
+    if ((e.target as HTMLElement).closest("a, [role='menuitem']")) {
       setIsOpen(false);
     }
   };

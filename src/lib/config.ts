@@ -15,7 +15,7 @@ export const APP_CONFIG = {
     headerHeight: 65, // px — used for progress bar offset, sticky positioning
     maxWidth: "max-w-6xl",
     pagepadding: "px-4",
-    progressBarHeight: 0.5,
+    progressBarHeight: 1,
     progressBarColor: "#C8922A",
   },
 

@@ -44,8 +44,6 @@ export default async function Header() {
           />
         </Link>
 
-
-
         {/* Desktop Navigation */}
         <nav className="hidden md:flex gap-1 text-sm font-medium text-text-muted">
           {navLinks.map((link) => (
@@ -112,7 +110,7 @@ export default async function Header() {
                 Admin Settings
               </Link>
             )}
-            
+
             <div className="my-1 h-px w-full bg-border" />
 
             <Form action={signOutAction}>
