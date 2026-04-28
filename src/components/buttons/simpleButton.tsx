@@ -1,6 +1,7 @@
 "use client";
 
 import React, { ButtonHTMLAttributes, forwardRef } from "react";
+import { useFormStatus } from "react-dom";
 import { cn } from "@/lib/utils";
 
 type ButtonVariant = "primary" | "secondary" | "danger" | "ghost";
@@ -73,15 +74,18 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) => {
+    const { pending } = useFormStatus();
+    const isActuallyLoading = isLoading || pending;
+
     return (
       <button
         ref={ref}
-        disabled={disabled || isLoading}
+        disabled={disabled || isActuallyLoading}
         className={cn(
           // Base styles
           "inline-flex items-center justify-center rounded-md font-medium transition-colors cursor-pointer",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-          "disabled:opacity-50 disabled:cursor-not-allowed",
+          "disabled:opacity-50 disabled:cursor-not-allowed disabled:animate-pulse",
           // Variant styles
           variantClasses[variant],
           // Size styles
@@ -91,10 +95,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         {...props}
       >
-        {isLoading && (
+        {isActuallyLoading && (
           <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
         )}
-        {icon && !isLoading && <span className="mr-2">{icon}</span>}
+        {icon && !isActuallyLoading && <span className="mr-2">{icon}</span>}
         {children}
       </button>
     );

@@ -6,7 +6,7 @@ import { requireUser } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { UPLOAD_LIMITS } from "@/lib/uploadConfig";
+import { UPLOAD_LIMITS } from "@/lib/config";
 
 export async function logout() {
   await requireUser();
@@ -62,3 +62,4 @@ export async function updateAvatar(formData: FormData) {
 
   revalidatePath("/profile");
 }
+

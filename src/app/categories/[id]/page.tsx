@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import SortSelect from "@/components/SortSelect";
 import PaginationControl from "@/components/PaginationControl";
-import { APP_CONFIG } from "@/config/app";
+import { APP_CONFIG } from "@/lib/config";
 
 const BOOKS_PER_PAGE = APP_CONFIG.pagination.booksPerPage;
 

@@ -4,7 +4,7 @@ import { addBookAction } from "./actions";
 import Form from "next/form";
 import { Button } from "@/components/buttons/simpleButton";
 import { CategorySelector } from "@/components/CategorySelector";
-import { UPLOAD_LIMITS, formatFileSize } from "@/lib/uploadConfig";
+import { UPLOAD_LIMITS, formatFileSize } from "@/lib/config";
 
 export default async function addNewBook() {
   await requireAdmin();
@@ -128,3 +128,4 @@ export default async function addNewBook() {
     </main>
   );
 }
+

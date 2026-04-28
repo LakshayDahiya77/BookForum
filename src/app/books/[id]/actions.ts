@@ -4,7 +4,7 @@ import { requireUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { updateBookAverageRating } from "@/lib/ratings";
 import { generateBookSummary } from "@/lib/ai/summarize";
-import { APP_CONFIG } from "@/config/app";
+import { APP_CONFIG } from "@/lib/config";
 
 function hasErrorCode(error: unknown): error is { code: string } {
   return typeof error === "object" && error !== null && "code" in error;

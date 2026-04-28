@@ -4,7 +4,7 @@ import Form from "next/form";
 import { addCategory } from "./actions";
 import { Button } from "@/components/buttons/simpleButton";
 import { CategoryRow } from "@/components/CategoryRow";
-import { UPLOAD_LIMITS, formatFileSize } from "@/lib/uploadConfig";
+import { UPLOAD_LIMITS, formatFileSize } from "@/lib/config";
 
 export default async function AdminCategoriesPage() {
   await requireAdmin();
@@ -104,3 +104,4 @@ export default async function AdminCategoriesPage() {
     </main>
   );
 }
+

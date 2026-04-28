@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import { loginAction, signupAction } from "./actions";
-import ThemeToggle from "@/components/ThemeToggle";
 import { Button } from "@/components/buttons/simpleButton";
 
 export default function AuthPage() {
@@ -31,7 +30,7 @@ export default function AuthPage() {
   }
 
   const inputClassName =
-    "w-full p-2 bg-background border border-border rounded-md focus:ring-2 focus:ring-accent/30 focus:border-accent focus:outline-none text-sm text-text-primary placeholder:text-text-muted font-medium transition-colors";
+    "w-full p-2 bg-white border border-[#D8DBE8] rounded-md focus:ring-2 focus:ring-[#A67520]/30 focus:border-[#A67520] focus:outline-none text-sm text-[#0F1117] placeholder:text-[#5A6080] font-medium transition-colors";
 
   return (
     <div
@@ -43,46 +42,20 @@ export default function AuthPage() {
         backgroundAttachment: "fixed",
       }}
     >
+      {/* Outer blur overlay */}
       <div className="absolute inset-0 backdrop-blur-glass-bg" />
-      <div className="z-10 w-full max-w-6xl relative backdrop-blur-glass-form">
-        <div className="border border-border rounded-2xl overflow-hidden relative z-20 bg-glass shadow-2xl p-8 lg:p-12 ">
-          <div className="absolute bottom-4 right-4 z-30">
-            <ThemeToggle />
-          </div>
-          <div className="grid grid-cols-2 w-full relative border-b border-border hidden">
-            <Button
-              variant="ghost"
-              onClick={() => {
-                setIsLogin(true);
-                setError("");
-                setSuccessMsg("");
-              }}
-              className={`w-full h-auto py-4 text-sm font-bold transition-colors border-b-2 rounded-none rounded-t-2xl ${
-                isLogin
-                  ? "border-accent text-accent bg-background/5"
-                  : "border-transparent text-text-muted hover:text-text-primary hover:bg-background/10"
-              }`}
-            >
-              LOGIN
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => {
-                setIsLogin(false);
-                setError("");
-                setSuccessMsg("");
-              }}
-              className={`w-full h-auto py-4 text-sm font-bold transition-colors border-b-2 rounded-none rounded-t-2xl ${
-                !isLogin
-                  ? "border-accent text-accent bg-background/5"
-                  : "border-transparent text-text-muted hover:text-text-primary hover:bg-background/10"
-              }`}
-            >
-              SIGN UP
-            </Button>
-          </div>
 
-          <div className="flex flex-col md:flex-row md:min-h-140 ">
+      <div className="z-10 w-full max-w-6xl relative">
+        <div
+          className="border border-[#D8DBE8] rounded-2xl overflow-hidden relative z-20 shadow-2xl p-8 lg:p-12"
+          style={{
+            backgroundColor: "rgba(255, 255, 255, 0.5)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+          }}
+        >
+          <div className="flex flex-col md:flex-row md:min-h-140">
+            {/* Left — decorative image */}
             <div className="hidden md:flex flex-1 items-center justify-center p-8 lg:p-12 relative w-full h-full min-h-[500px]">
               <Image
                 src="/sign-up-element-chair.png"
@@ -93,7 +66,9 @@ export default function AuthPage() {
               />
             </div>
 
+            {/* Right — form */}
             <div className="flex-1 p-8 md:p-12 flex flex-col justify-center relative min-h-125">
+              {/* Logo */}
               <div className="h-20 mb-8 relative w-full">
                 <Image
                   src="/site-logo-transparent.png"
@@ -102,13 +77,15 @@ export default function AuthPage() {
                   className="object-contain mx-auto"
                 />
               </div>
+
+              {/* Error / Success messages */}
               {error && (
-                <div className="mb-4 p-3 bg-surface text-danger text-sm rounded-md border border-danger/40">
+                <div className="mb-4 p-3 bg-white text-[#C0392B] text-sm rounded-md border border-[#C0392B]/40">
                   {error}
                 </div>
               )}
               {successMsg && (
-                <div className="mb-4 p-3 bg-surface text-accent text-sm rounded-md border border-accent/40">
+                <div className="mb-4 p-3 bg-white text-[#A67520] text-sm rounded-md border border-[#A67520]/40">
                   {successMsg}
                 </div>
               )}
@@ -117,12 +94,14 @@ export default function AuthPage() {
                 <form
                   action={handleLogin}
                   className="flex flex-col gap-5 max-w-sm mx-auto w-full h-95"
+                  key="login"
                 >
                   <input
                     type="email"
                     name="email"
                     placeholder="Email"
                     required
+                    autoComplete="email"
                     className={inputClassName}
                   />
                   <input
@@ -130,39 +109,44 @@ export default function AuthPage() {
                     name="password"
                     placeholder="Password"
                     required
+                    autoComplete="current-password"
                     className={inputClassName}
                   />
-
                   <Button
                     type="submit"
                     isLoading={isLoading}
                     className="mt-2 mx-auto w-[65%] font-bold uppercase shadow-lg"
                     size="lg"
                   >
-                    {isLoading ? "Signing in..." : "LOGIN"}
+                    {isLoading ? "Signing in..." : "Login"}
                   </Button>
-                  <div className="text-center mt-auto pt-2 text-sm text-text-primary font-medium">
+                  <div className="text-center mt-auto pt-2 text-sm text-[#0F1117] font-medium">
                     Don&apos;t have an account?{" "}
-                    <Button
+                    <button
                       type="button"
-                      variant="ghost"
-                      onClick={() => setIsLogin(false)}
-                      className="text-accent hover:text-accent-hover hover:underline font-semibold p-0 h-auto bg-transparent hover:bg-transparent"
+                      onClick={() => {
+                        setIsLogin(false);
+                        setError("");
+                        setSuccessMsg("");
+                      }}
+                      className="text-[#A67520] hover:text-[#8A6018] hover:underline font-semibold bg-transparent border-none cursor-pointer"
                     >
                       Sign up
-                    </Button>
+                    </button>
                   </div>
                 </form>
               ) : (
                 <form
                   action={handleSignup}
                   className="flex flex-col gap-5 max-w-sm mx-auto w-full h-95"
+                  key="signup"
                 >
                   <input
                     type="text"
                     name="name"
                     placeholder="Name"
                     required
+                    autoComplete="name"
                     className={inputClassName}
                   />
                   <input
@@ -170,6 +154,7 @@ export default function AuthPage() {
                     name="email"
                     placeholder="Email"
                     required
+                    autoComplete="email"
                     className={inputClassName}
                   />
                   <input
@@ -178,6 +163,7 @@ export default function AuthPage() {
                     placeholder="Password (min. 6 chars)"
                     required
                     minLength={6}
+                    autoComplete="new-password"
                     className={inputClassName}
                   />
                   <input
@@ -186,27 +172,30 @@ export default function AuthPage() {
                     placeholder="Confirm Password"
                     required
                     minLength={6}
+                    autoComplete="new-password"
                     className={inputClassName}
                   />
-
                   <Button
                     type="submit"
                     isLoading={isLoading}
                     className="mt-2 mx-auto w-[65%] font-bold uppercase shadow-lg"
                     size="lg"
                   >
-                    {isLoading ? "Creating account..." : "SIGN UP"}
+                    {isLoading ? "Creating account..." : "Sign Up"}
                   </Button>
-                  <div className="text-center mt-auto pt-2 text-sm text-text-primary font-medium">
+                  <div className="text-center mt-auto pt-2 text-sm text-[#0F1117] font-medium">
                     Already have an account?{" "}
-                    <Button
+                    <button
                       type="button"
-                      variant="ghost"
-                      onClick={() => setIsLogin(true)}
-                      className="text-accent hover:text-accent-hover hover:underline font-semibold p-0 h-auto bg-transparent hover:bg-transparent"
+                      onClick={() => {
+                        setIsLogin(true);
+                        setError("");
+                        setSuccessMsg("");
+                      }}
+                      className="text-[#A67520] hover:text-[#8A6018] hover:underline font-semibold bg-transparent border-none cursor-pointer"
                     >
                       Login
-                    </Button>
+                    </button>
                   </div>
                 </form>
               )}

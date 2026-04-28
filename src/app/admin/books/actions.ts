@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
-import { UPLOAD_LIMITS } from "@/lib/uploadConfig";
+import { UPLOAD_LIMITS } from "@/lib/config";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
@@ -234,3 +234,4 @@ export async function deleteBookAction(formData: FormData) {
   revalidatePath("/");
   redirect("/books");
 }
+

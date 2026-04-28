@@ -4,7 +4,7 @@ import { requireAdmin } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
-import { UPLOAD_LIMITS } from "@/lib/uploadConfig";
+import { UPLOAD_LIMITS } from "@/lib/config";
 
 export async function deleteCategory(formData: FormData) {
   await requireAdmin();
@@ -106,3 +106,4 @@ export async function updateCategory(formData: FormData) {
   });
   revalidatePath("/admin/categories");
 }
+
