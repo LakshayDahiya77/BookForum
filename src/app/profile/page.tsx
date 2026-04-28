@@ -5,8 +5,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ReviewSnippetCard } from "@/components/ReviewCard";
 import SortSelect from "@/components/SortSelect";
-import { updateAvatar } from "./actions";
 import { Edit2, ThumbsUp } from "lucide-react";
+import ProfileSettingsModal from "@/components/ProfileSettingsModal";
 
 const reviewSortOptions = [
   { label: "Newest", value: "newest" },
@@ -159,9 +159,9 @@ export default async function ProfilePage({
     <main className="min-h-screen bg-background py-12 px-4">
       <div className="max-w-7xl mx-auto space-y-12">
         {/* Profile Header */}
-        <div className="bg-surface p-8 rounded-2xl shadow-sm border border-border flex items-center gap-6">
+        <div className="relative bg-surface p-5 sm:p-8 pr-16 sm:pr-20 rounded-2xl shadow-sm border border-border flex flex-col items-center gap-5 sm:flex-row sm:items-center sm:gap-6">
           <div className="flex flex-col items-center gap-2">
-            <div className="w-24 h-24 bg-background rounded-full shrink-0 overflow-hidden border-2 border-border shadow-md">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-background rounded-full shrink-0 overflow-hidden border-2 border-border shadow-md">
               {user.avatarUrl ? (
                 <img
                   src={user.avatarUrl}
@@ -174,26 +174,13 @@ export default async function ProfilePage({
                 </div>
               )}
             </div>
-            <form action={updateAvatar} className="flex flex-col items-center gap-2">
-              <input
-                type="file"
-                name="avatarFile"
-                accept="image/*"
-                required
-                className="max-w-44 text-xs text-text-muted file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-accent file:text-background hover:file:bg-accent-hover cursor-pointer"
-              />
-              <button
-                type="submit"
-                className="text-xs font-semibold px-3 py-1 rounded-md border border-border text-text-primary hover:border-accent hover:text-accent transition-colors"
-              >
-                Change Avatar
-              </button>
-            </form>
           </div>
-          <div>
-            <h1 className="text-3xl font-bold text-text-primary">{user.name || "Reader"}</h1>
-            <p className="text-text-muted">{user.email}</p>
-            <div className="mt-2 flex gap-4 text-sm text-text-muted font-medium">
+          <div className="text-center sm:text-left">
+            <h1 className="text-2xl sm:text-3xl font-bold text-text-primary">
+              {user.name || "Reader"}
+            </h1>
+            <p className="text-sm sm:text-base text-text-muted break-all">{user.email}</p>
+            <div className="mt-3 flex flex-wrap justify-center sm:justify-start gap-3 sm:gap-4 text-sm text-text-muted font-medium">
               <span className="inline-flex items-center gap-1.5">
                 <ThumbsUp className="w-4 h-4" />
                 {user._count.bookVotes} Books Liked
@@ -204,6 +191,9 @@ export default async function ProfilePage({
               </span>
             </div>
           </div>
+          <ProfileSettingsModal
+            user={{ name: user.name, email: user.email, avatarUrl: user.avatarUrl }}
+          />
         </div>
 
         <div className="flex items-center gap-3 border-b border-border">

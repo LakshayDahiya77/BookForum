@@ -103,7 +103,7 @@ export default async function BookDetailPage({
   return (
     <main className="w-full flex-1 max-w-7xl mx-auto py-10 px-4 sm:px-6 relative">
       {/* Hero section */}
-      <div className="flex gap-8 pb-8 border-b border-border relative">
+      <div className="flex flex-col md:flex-row gap-6 md:gap-8 pb-8 border-b border-border relative">
         {book.coverUrl && (
           <Image
             src={book.coverUrl}
@@ -111,7 +111,7 @@ export default async function BookDetailPage({
             width={192}
             height={288}
             loading="eager"
-            className="rounded-md shadow-md object-cover shrink-0 w-auto h-auto"
+            className="rounded-md shadow-md object-cover shrink-0 w-48 h-72 mx-auto md:mx-0"
           />
         )}
 

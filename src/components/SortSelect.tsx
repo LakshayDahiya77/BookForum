@@ -1,13 +1,8 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import Dropdown, { DropdownItem } from "@/components/Dropdown";
+import { ChevronDown } from "lucide-react";
 
 type SortOption = {
   label: string;
@@ -33,23 +28,22 @@ export default function SortSelect({ name = "sort", value, options }: SortSelect
     router.push(`${pathname}?${next.toString()}`);
   };
 
-  return (
-    <Select value={value} onValueChange={handleSortChange}>
-      {/* The visible button */}
-      <SelectTrigger className="w-[180px] bg-surface border-border text-text-primary focus:ring-accent">
-        <SelectValue placeholder="Sort by...">
-          {options.find((opt) => opt.value === value)?.label || "Sort by..."}
-        </SelectValue>
-      </SelectTrigger>
+  const selectedLabel = options.find((opt) => opt.value === value)?.label || "Sort by...";
 
-      {/* The custom dropdown menu (inherits your fonts automatically) */}
-      <SelectContent>
-        {options.map((option) => (
-          <SelectItem key={option.value} value={option.value} className="cursor-pointer">
-            {option.label}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+  const trigger = (
+    <div className="flex w-[180px] items-center justify-between gap-1.5 rounded-lg border border-border bg-surface py-2 pr-2 pl-2.5 text-sm whitespace-nowrap transition-colors hover:border-accent">
+      <span className="truncate">{selectedLabel}</span>
+      <ChevronDown className="size-4 text-text-muted shrink-0 pointer-events-none" />
+    </div>
+  );
+
+  return (
+    <Dropdown trigger={trigger} align="left" menuClassName="w-[180px]">
+      {options.map((option) => (
+        <DropdownItem key={option.value} onClick={() => handleSortChange(option.value)}>
+          {option.label}
+        </DropdownItem>
+      ))}
+    </Dropdown>
   );
 }
