@@ -8,7 +8,7 @@ import { addAuthor } from "@/app/admin/authors/actions";
 import { Button } from "@/components/buttons/simpleButton";
 import { CategorySelector } from "@/components/CategorySelector";
 import { CategoryRow } from "@/components/CategoryRow";
-import { UPLOAD_LIMITS, formatFileSize } from "@/lib/uploadConfig";
+import { UPLOAD_LIMITS, formatFileSize } from "@/lib/config";
 import { BookOpen, Bookmark, Edit2 } from "lucide-react";
 import AuthorManager from "@/components/admin/AuthorManager";
 
@@ -316,3 +316,4 @@ export default async function AdminPage({
     </main>
   );
 }
+

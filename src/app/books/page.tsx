@@ -4,7 +4,7 @@ import BookGrid from "@/components/BookGrid";
 import SearchBar from "@/components/SearchBar";
 import SortSelect from "@/components/SortSelect";
 import PaginationControl from "@/components/PaginationControl";
-import { APP_CONFIG } from "@/config/app";
+import { APP_CONFIG } from "@/lib/config";
 
 const BOOKS_PER_PAGE = APP_CONFIG.pagination.booksPerPage;
 
@@ -121,3 +121,4 @@ export default async function BooksGridPage({
     </div>
   );
 }
+

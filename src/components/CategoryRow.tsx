@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { Button } from "@/components/buttons/simpleButton";
 import { updateCategory, deleteCategory } from "@/app/admin/categories/actions";
-import { UPLOAD_LIMITS, formatFileSize } from "@/lib/uploadConfig";
+import { UPLOAD_LIMITS, formatFileSize } from "@/lib/config";
 import { ArrowRight, Edit2, Trash2 } from "lucide-react";
 
 type Category = {
@@ -170,3 +170,4 @@ export function CategoryRow({ category }: { category: Category }) {
     </li>
   );
 }
+

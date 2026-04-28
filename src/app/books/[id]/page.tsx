@@ -11,7 +11,7 @@ import MarkdownEditor from "@/components/MarkdownEditor";
 import SortSelect from "@/components/SortSelect";
 import EditBookModal from "@/components/EditBookModal";
 import PaginationControl from "@/components/PaginationControl";
-import { APP_CONFIG } from "@/config/app";
+import { APP_CONFIG } from "@/lib/config";
 
 const REVIEWS_PER_PAGE = APP_CONFIG.pagination.reviewsPerPage;
 
@@ -231,11 +231,11 @@ export default async function BookDetailPage({
               <option value="" disabled>
                 Select a rating...
               </option>
-              <option value="5">5 — Excellent</option>
-              <option value="4">4 — Good</option>
-              <option value="3">3 — Average</option>
-              <option value="2">2 — Poor</option>
-              <option value="1">1 — Terrible</option>
+              <option value="5">5 - Excellent</option>
+              <option value="4">4 - Good</option>
+              <option value="3">3 - Average</option>
+              <option value="2">2 - Poor</option>
+              <option value="1">1 - Terrible</option>
             </select>
           </div>
           <MarkdownEditor name="review-text" placeholder="Write your review..." />

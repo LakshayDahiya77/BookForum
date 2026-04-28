@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useTransition } from "react";
 import { Heart } from "lucide-react";
 
@@ -17,9 +16,8 @@ export default function ReviewLikeButton({
   action,
 }: ReviewLikeButtonProps) {
   const [liked, setLiked] = useState(false);
+  const [localLikes, setLocalLikes] = useState(reviewLikes);
   const [isPending, startTransition] = useTransition();
-
-  const visibleLikes = Math.max(0, reviewLikes + (liked ? 1 : 0));
 
   return (
     <button
@@ -32,19 +30,20 @@ export default function ReviewLikeButton({
           formData.set("book-id", bookId);
           formData.set("liked", String(liked));
           await action(formData);
+          setLocalLikes((prev) => (liked ? prev - 1 : prev + 1));
           setLiked((prev) => !prev);
         });
       }}
-      className="text-xs font-semibold text-text-muted disabled:opacity-60 hover:scale-110 transition-transform duration-150"
+      className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-1 rounded-md border transition-colors disabled:opacity-60 disabled:animate-pulse hover:scale-110 duration-150 ${
+        liked ? "border-danger text-danger" : "border-border text-text-muted hover:border-danger/50"
+      }`}
     >
-      <span className="inline-flex items-center gap-1">
-        <Heart
-          className={`w-4 h-4 transition-all duration-200 ${
-            liked ? "fill-danger text-danger scale-110" : "text-text-muted scale-100"
-          }`}
-        />
-        <span>{visibleLikes}</span>
-      </span>
+      <Heart
+        className={`w-3.5 h-3.5 transition-all duration-200 ${
+          liked ? "fill-danger text-danger" : "text-text-muted"
+        }`}
+      />
+      <span>{localLikes}</span>
     </button>
   );
 }

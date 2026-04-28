@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useTransition } from "react";
 import Image from "next/image";
 import { DeleteReview, ToggleReviewLike } from "@/app/books/[id]/actions";
 import ReviewLikeButton from "@/components/ReviewLikeButton";
@@ -12,6 +15,7 @@ type ReviewCardProps = {
   user: {
     name: string | null;
     avatarUrl: string | null;
+    createdAt?: Date;
   };
   rating: number;
   content: string;
@@ -34,16 +38,19 @@ export default function ReviewCard({
   createdAt,
   bookContext,
 }: ReviewCardProps) {
+  const [isPending, startTransition] = useTransition();
+
   return (
-    <div className="p-4 border border-border rounded-md bg-surface shadow-sm flex flex-col gap-3">
-      {/* Optional Book Context (for profile pages) */}
+    <div className="p-5 border border-border rounded-md bg-surface flex flex-col gap-4">
+      {/* Optional Book Context */}
       {bookContext && (
         <Link href={`/books/${bookContext.id}`} className="hover:opacity-80 transition-opacity">
-          <h3 className="font-bold text-accent text-sm mb-1">{bookContext.title}</h3>
+          <h3 className="font-bold text-accent text-sm">{bookContext.title}</h3>
         </Link>
       )}
 
-      <div className="flex gap-4">
+      {/* Header — avatar, name, member since, stars, date */}
+      <div className="flex gap-4 items-start">
         {/* Avatar */}
         <div className="relative w-10 h-10 bg-background rounded-full shrink-0 overflow-hidden border border-border">
           {user.avatarUrl ? (
@@ -61,49 +68,70 @@ export default function ReviewCard({
           )}
         </div>
 
-        {/* Content */}
+        {/* Name + member since + stars */}
         <div className="flex-1">
-          <div className="flex items-baseline gap-2 mb-1">
-            <span className="font-bold text-text-primary">{user.name || "Anonymous"}</span>
-            <span className="text-xs text-text-muted">
-              {new Date(createdAt).toLocaleDateString()}
-            </span>
+          <div className="flex items-start justify-between">
+            {/* Left — name + member since */}
+            <div>
+              <span className="font-bold text-text-primary">{user.name || "Anonymous"}</span>
+              {user.createdAt && (
+                <p className="text-xs text-text-muted mt-0.5">
+                  Member since {new Date(user.createdAt).getFullYear()}
+                </p>
+              )}
+            </div>
+            {/* Right — stars + date */}
+            <div className="flex flex-col items-end gap-1">
+              <div className="flex gap-0.5">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <Star
+                    key={i}
+                    className={`w-3.5 h-3.5 ${i <= rating ? "fill-accent text-accent" : "text-border"}`}
+                  />
+                ))}
+              </div>
+              <span className="text-xs text-text-muted">
+                {new Date(createdAt).toLocaleDateString()}
+              </span>
+            </div>
           </div>
-          {/* The Delete Button (Only shows if they own it) */}
-          {isOwner && (
-            <form action={DeleteReview}>
+        </div>
+      </div>
+
+      {/* Review content */}
+      <div className="rounded-md border border-border/60 bg-background/40 px-4 py-3">
+        <MarkdownPreview
+          source={content}
+          className="text-sm text-text-primary leading-relaxed wmde-markdown-reset"
+        />
+      </div>
+
+      {/* Footer — like centered, delete right */}
+      <div className="relative flex justify-center items-center pt-1">
+        <ReviewLikeButton
+          action={ToggleReviewLike}
+          reviewId={id}
+          bookId={bookId}
+          reviewLikes={reviewLikes}
+        />
+        {isOwner && (
+          <div className="absolute right-0">
+            <form action={(formData) => startTransition(() => DeleteReview(formData))}>
               <input type="hidden" name="review-id" value={id} />
               <input type="hidden" name="book-id" value={bookId} />
               <button
                 type="submit"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-danger hover:scale-110 transition-transform duration-150"
+                disabled={isPending}
+                className={`inline-flex items-center gap-1 text-xs font-semibold text-danger border border-border px-2 py-1 rounded-md hover:border-danger transition-colors ${
+                  isPending ? "opacity-50 cursor-not-allowed animate-pulse" : ""
+                }`}
               >
                 <Trash2 className="w-3.5 h-3.5" />
-                <span>Delete</span>
+                <span>{isPending ? "Deleting..." : "Delete"}</span>
               </button>
             </form>
-          )}
-          <div className="flex gap-0.5 mb-2">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <Star
-                key={i}
-                className={`w-3.5 h-3.5 ${i <= rating ? "fill-accent text-accent" : "text-border"}`}
-              />
-            ))}
           </div>
-          <MarkdownPreview
-            source={content}
-            className="text-sm text-text-primary leading-relaxed wmde-markdown-reset"
-          />
-          <div className="mt-3">
-            <ReviewLikeButton
-              action={ToggleReviewLike}
-              reviewId={id}
-              bookId={bookId}
-              reviewLikes={reviewLikes}
-            />
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
