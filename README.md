@@ -4,25 +4,41 @@
 
 ## 📸 Screenshots
 
+### Login / Signup Page
+
+![Login / Signup Page](screenshots/login.png)
+
 ### Home Page
 
 ![Home Page](screenshots/home.png)
 
+### Books Divided in Categories
+
+![Categories](screenshots/categories.png)
+
+### Light & Dark Themes
+
+![Light & Dark Themes](screenshots/dark-and-light-combined.png)
+
 ### Book Detail & Reviews
 
-![Book Detail](screenshots/book-detail.png)
+![Book Detail & Reviews](screenshots/book-detail.png)
 
 ### AI Review Summary
 
-![AI Summary](screenshots/ai-summary.png)
+![AI Review Summary](screenshots/ai-summary.png)
+
+### Search Functionality
+
+![Search Functionality](screenshots/search.png)
+
+### Profile Page
+
+![Profile Page](screenshots/profile-page.png)
 
 ### Admin Panel
 
 ![Admin Panel](screenshots/admin.png)
-
-### Light & Dark Theme
-
-![Themes](screenshots/themes.png)
 
 ## 🚀 Features
 
