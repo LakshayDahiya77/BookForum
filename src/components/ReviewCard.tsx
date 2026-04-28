@@ -99,7 +99,7 @@ export default function ReviewCard({
       </div>
 
       {/* Review content */}
-      <div className="rounded-md border border-border/60 bg-background/40 px-4 py-3">
+      <div className="border-b border-t border-border pt-2 pb-2">
         <MarkdownPreview
           source={content}
           className="text-sm text-text-primary leading-relaxed wmde-markdown-reset"

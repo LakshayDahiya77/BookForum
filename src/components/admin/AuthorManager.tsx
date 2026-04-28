@@ -28,7 +28,7 @@ export default function AuthorManager({ initialAuthors }: AuthorManagerProps) {
   }, [search, initialAuthors]);
 
   return (
-    <div className="bg-surface rounded-xl shadow-sm border border-border w-full max-w-xl flex flex-col max-h-[800px] overflow-hidden">
+    <div className="bg-surface rounded-xl shadow-sm border border-border w-full max-w-xl flex flex-col max-h-200 overflow-hidden">
       <div className="p-8 pb-4 shrink-0">
         <h2 className="text-2xl font-bold text-text-primary mb-6 border-b border-border pb-4">
           All Authors
@@ -81,18 +81,6 @@ export default function AuthorManager({ initialAuthors }: AuthorManagerProps) {
                   >
                     <Edit2 className="w-4 h-4" />
                   </Button>
-                  <Form action={deleteAuthor}>
-                    <input type="hidden" name="id" value={author.id} />
-                    <Button
-                      type="submit"
-                      variant="ghost"
-                      size="sm"
-                      className="p-2 h-auto text-text-muted hover:text-red-500 border border-transparent hover:border-red-500/20"
-                      title="Delete"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </Form>
                 </div>
               </li>
             ))}
@@ -171,6 +159,24 @@ export default function AuthorManager({ initialAuthors }: AuthorManagerProps) {
                 </div>
 
                 <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-border">
+                  <Form action={deleteAuthor}>
+                    <input type="hidden" name="id" value={editingAuthor.id} />
+                    <Button
+                      type="submit"
+                      variant="danger"
+                      onClick={(e) => {
+                        if (!confirm("Are you sure you want to delete this author?")) {
+                          e.preventDefault();
+                        } else {
+                          setEditingAuthor(null);
+                        }
+                      }}
+                      className="px-4 py-2 text-xs font-bold uppercase tracking-widest inline-flex items-center gap-1"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Delete
+                    </Button>
+                  </Form>
                   <Button
                     type="button"
                     variant="secondary"
