@@ -47,7 +47,7 @@ export default function AuthPage() {
     <div
       className="min-h-screen flex flex-col justify-center items-center p-4 py-12 relative overflow-hidden"
       style={{
-        backgroundImage: "url('/sign-up-background.png')",
+        backgroundImage: "url('/sign-up-background.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed",
